@@ -1,0 +1,185 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Doctor Profile</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+      body {
+        background: linear-gradient(135deg, #e3f2fd, #f8f9fa);
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
+
+      .form-container {
+        max-width: 850px;
+        margin: 60px auto;
+      }
+
+      .card {
+        border: none;
+        border-radius: 15px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+        margin-bottom: 25px;
+      }
+
+      .card-header {
+        background: #0d6efd;
+        color: #fff;
+        font-weight: 600;
+        font-size: 1.2rem;
+        border-radius: 15px 15px 0 0;
+      }
+
+      .profile-preview {
+        display: block;
+        margin: 15px auto;
+        width: 130px;
+        height: 130px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 4px solid #fff;
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+      }
+
+      .form-label {
+        font-weight: 600;
+        color: #495057;
+      }
+
+      .input-group-text {
+        background: #f1f3f5;
+        border: none;
+        border-radius: 10px 0 0 10px;
+        font-size: 1.1rem;
+      }
+
+      .form-control {
+        border-radius: 0 10px 10px 0;
+        padding: 12px;
+      }
+
+      .btn-save {
+        background: linear-gradient(90deg, #0d6efd, #0b5ed7);
+        color: #fff;
+        font-weight: 600;
+        border-radius: 50px;
+        padding: 12px 30px;
+        transition: all 0.3s ease;
+        box-shadow: 0 6px 15px rgba(13, 110, 253, 0.3);
+        width: 100%;
+      }
+
+      .btn-save:hover {
+        background: linear-gradient(90deg, #0b5ed7, #084298);
+        transform: translateY(-3px);
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container form-container">
+      <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {% if form.errors %}
+        <div class="alert alert-danger">
+          {% for error in form.errors %}
+          <p>{{ error }}</p>
+          {% endfor %}
+        </div>
+        {% endif %}
+        <!-- Profile Image -->
+        <div class="card text-center">
+          <div class="card-body">
+            {% if form.instance.profile_image %}
+            <img src="{{ form.instance.profile_image.url }}" class="profile-preview" alt="Profile Preview">
+            {% else %}
+            <img src="{% static 'default-avatar.png' %}" class="profile-preview" alt="Profile Preview">
+            {% endif %}
+            <div class="mb-3">
+              <label class="form-label">Upload New Image</label>
+              {{ form.profile_image }}
+            </div>
+          </div>
+        </div>
+
+        <!-- User Information -->
+        <div class="card">
+          <div class="card-header">👤 User Information</div>
+          <div class="card-body">
+            <div class="mb-3 input-group">
+              <span class="input-group-text"><i class="bi bi-person"></i></span>
+              {{ user_form.first_name }}
+            </div>
+            <div class="mb-3 input-group">
+              <span class="input-group-text"><i class="bi bi-person-fill"></i></span>
+              {{ user_form.last_name }}
+            </div>
+            <div class="mb-3 input-group">
+              <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+              {{ user_form.email }}
+            </div>
+          </div>
+        </div>
+        <!-- Doctor Profile -->
+        <div class="card">
+          <div class="card-header">🩺 Doctor Profile</div>
+          <div class="card-body">
+
+            <!-- Bio -->
+            <div class="mb-3">
+              <label class="form-label">Bio</label>
+              {{ form.bio }}
+            </div>
+
+            <!-- Major -->
+            <div class="mb-3 input-group">
+              <span class="input-group-text"><i class="bi bi-bookmark-heart"></i></span>
+              {{ form.major }}
+            </div>
+
+            <!-- Major Description -->
+            <div class="mb-3">
+              <label class="form-label">Major Description</label>
+              {{ form.major_description }}
+            </div>
+
+            <!-- Consultation Fee -->
+            <div class="mb-3 input-group">
+              <span class="input-group-text"><i class="bi bi-cash-coin"></i></span>
+              {{ form.consultation_fee }}
+            </div>
+
+            <!-- Working Hours -->
+            <div class="mb-3 input-group">
+              <span class="input-group-text"><i class="bi bi-clock"></i></span>
+              {{ form.work_start_time }}
+              <span class="input-group-text">to</span>
+              {{ form.work_end_time }}
+            </div>
+
+
+            <!-- Phone Number -->
+            <div class="mb-3 input-group">
+              <span class="input-group-text"><i class="bi bi-telephone"></i></span>
+              {{ form.phone_number }}
+            </div>
+
+          </div>
+        </div>
+
+
+        <div class="mt-4">
+          <button type="submit" class="btn btn-save">💾 Save Changes</button>
+        </div>
+      </form>
+    </div>
+  </body>
+
+</html>
+{% endblock %}

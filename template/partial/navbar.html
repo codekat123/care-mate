@@ -1,4 +1,5 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+{% load static %}
+<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm" style="position:fixed; width:100%; z-index:999;">
   <div class="container">
     <!-- Brand -->
     <a class="navbar-brand fw-bold text-primary" href="#">
@@ -15,18 +16,31 @@
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav ms-auto align-items-lg-center">
         <li class="nav-item">
-          <a class="nav-link active fw-semibold" href="#">Home</a>
+          <a class="nav-link active fw-semibold" href="$">Home</a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link fw-semibold" href="#">Sign Up</a>
-        </li>
-        <li class="nav-item">
-          <a class="btn btn-primary ms-lg-3 px-3 rounded-pill" href="#">
-            Login
-          </a>
-        </li>
+
+        {% if request.user.is_authenticated %}
+          <!-- Show Logout when logged in -->
+          <li class="nav-item">
+            <form method="post" action="{% url 'account:logout' %}">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-outline-danger ms-lg-3 px-3 rounded-pill">
+                Logout
+              </button>
+            </form>
+          </li>
+        {% else %}
+          <!-- Show Sign Up + Login when logged out -->
+          <li class="nav-item">
+            <a class="nav-link fw-semibold" href="{% url 'account:sign-up' %}">Sign Up</a>
+          </li>
+          <li class="nav-item">
+            <a class="btn btn-primary ms-lg-3 px-3 rounded-pill" href="{% url 'account:login' %}">
+              Login
+            </a>
+          </li>
+        {% endif %}
       </ul>
     </div>
   </div>
 </nav>
-    

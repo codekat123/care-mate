@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Doctor Profile | CareMate{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+
+      <!-- Profile Card -->
+      <div class="card shadow-lg border-0 rounded-4 overflow-hidden">
+
+        <!-- Header banner -->
+        <div class="bg-primary" style="height: 120px; background: linear-gradient(135deg, #0d6efd, #20c997);"></div>
+
+        <div class="card-body text-center position-relative">
+
+          <!-- Profile Image -->
+          <div class="position-absolute top-0 start-50 translate-middle">
+            {% if request.user.doctor.profile_image %}
+              <img src="{{ request.user.doctor.profile_image.url }}" alt="Profile Image"
+                   class="rounded-circle border border-3 border-white shadow"
+                   style="width: 140px; height: 140px; object-fit: cover;">
+            {% else %}
+              <img src="{% static 'default-avatar.png' %}" alt="Profile Image"
+                   class="rounded-circle border border-3 border-white shadow"
+                   style="width: 140px; height: 140px; object-fit: cover;">
+            {% endif %}
+          </div>
+
+          <!-- Name -->
+          <div class="mt-5 pt-3">
+            <h3 class="fw-bold text-dark">{{ request.user.first_name }} {{ request.user.last_name }}</h3>
+            <p class="text-primary fw-semibold mb-2"><i class="bi bi-heart-pulse me-1"></i> Doctor</p>
+          </div>
+
+          <!-- Bio -->
+          <p class="text-muted mb-4">{{ request.user.doctor.bio|default:"This doctor hasn’t added a bio yet." }}</p>
+
+          <!-- Info Section -->
+          <div class="row g-3 text-start">
+
+            <!-- Major -->
+            <div class="col-md-6">
+              <div class="p-3 bg-light rounded shadow-sm h-100">
+                <h6 class="fw-semibold mb-1"><i class="bi bi-bookmark-heart me-1 text-primary"></i> Major</h6>
+                <p class="mb-0">{{ request.user.doctor.major|default:"Not provided" }}</p>
+              </div>
+            </div>
+
+            <!-- Major Description -->
+            <div class="col-md-6">
+              <div class="p-3 bg-light rounded shadow-sm h-100">
+                <h6 class="fw-semibold mb-1"><i class="bi bi-info-circle me-1 text-primary"></i> Major Description</h6>
+                <p class="mb-0">{{ request.user.doctor.major_description|default:"Not provided" }}</p>
+              </div>
+            </div>
+
+            <!-- Consultation Fee -->
+            <div class="col-md-6">
+              <div class="p-3 bg-light rounded shadow-sm h-100">
+                <h6 class="fw-semibold mb-1"><i class="bi bi-cash-coin me-1 text-success"></i> Consultation Fee</h6>
+                <p class="mb-0">{{ request.user.doctor.consultation_fee|default:"Not provided" }}</p>
+              </div>
+            </div>
+
+            <!-- Working Hours -->
+            <div class="col-md-6">
+              <div class="p-3 bg-light rounded shadow-sm h-100">
+                <h6 class="fw-semibold mb-1"><i class="bi bi-clock-history me-1 text-primary"></i> Working Hours</h6>
+                <p class="mb-0">
+                  {{ request.user.doctor.work_start_time|time:"H:i" }} - {{ request.user.doctor.work_end_time|time:"H:i" }}
+                </p>
+              </div>
+            </div>
+
+            <!-- Phone Number -->
+            <div class="col-md-6">
+              <div class="p-3 bg-light rounded shadow-sm h-100">
+                <h6 class="fw-semibold mb-1"><i class="bi bi-telephone me-1 text-primary"></i> Phone Number</h6>
+                <p class="mb-0">{{ request.user.doctor.phone_number|default:"Not provided" }}</p>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Buttons -->
+          <div class="d-flex justify-content-center gap-3 mt-4">
+            <a href="{% url 'profile:edit_doctor' %}" class="btn btn-outline-primary rounded-pill px-4 shadow-sm">
+              <i class="bi bi-pencil-square me-1"></i> Edit Profile
+            </a>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+{% endblock %}

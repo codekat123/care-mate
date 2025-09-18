@@ -1,29 +1,60 @@
 from django.shortcuts import render ,redirect
 from django.urls import reverse_lazy
-from django.contrib.auth import authenticate , login , logout
+from django.contrib.auth import authenticate , login 
 from django.contrib.auth.views import LoginView
 from django.views.generic.edit import CreateView
 from .models import User
-from .forms import SignUp
+from .forms import SignUpForm
 
 class SignUp(CreateView):
      model = User
-     form_class = SignUp
+     form_class = SignUpForm
      template_name = 'account/sign_up.html'
-     success_url = reverse_lazy('#')
-     def form_valid(self,form):
-          user=form.save()
-          login(self.request,user)
-          return super().form_valid(form)
+
+     def form_valid(self, form):
+         user = form.save()
+         raw_password = form.cleaned_data.get("password1")
+         authenticated_user = authenticate(
+             self.request,
+             username=user.username,
+             password=raw_password
+         )
+         if authenticated_user is not None:
+             login(self.request, authenticated_user)
+             if authenticated_user.role == 'doctor':
+                 return redirect('profile:profile_doctor')
+             return redirect('profile:profile_patient')
+     
+         return super().form_invalid(form)
+
+
+     
+     def get_success_url(self):
+          if self.request.user.role == 'doctor':
+               return reverse_lazy('profile:profile_doctor')
+          return reverse_lazy('profile:profile_patient')
+
+     def get(self, *args, **kwargs):
+        if self.request.user.is_authenticated:
+          if self.request.user.role == 'doctor':
+            return redirect('profile:profile_doctor')
+          return redirect('profile:profile_patient')
+        return super().get(*args, **kwargs)
 
 
 class CustomLoginView(LoginView):
     template_name = 'account/login.html'
-    redirect_authenticated_user = False
+    redirect_authenticated_user = True
 
     def get_success_url(self):
-         return self.request.path
+          
+          if self.request.user.role == 'doctor':
+               return reverse_lazy('profile:profile_doctor')
+          return reverse_lazy('profile:profile_patient')
 
-def log_out(request):
-     logout(request)
-     return redirect('account:login')
+    def get(self, *args, **kwargs):
+        if self.request.user.is_authenticated:
+          if self.request.user.role == 'doctor':
+            return redirect('profile:profile_doctor')
+          return redirect('profile:profile_patient')
+        return super().get(*args, **kwargs)
