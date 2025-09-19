@@ -1,14 +1,107 @@
 {% load static %}
-<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm" style="position:fixed; width:100%; z-index:999;">
+<style>
+  .modern-navbar {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+  }
+
+  .nav-item {
+    margin-left: 10px;
+  }
+
+  .navbar-brand {
+    font-size: 1.5rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-decoration: none;
+  }
+
+  .navbar-brand i {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+
+    0%,
+    100% {
+      transform: scale(1);
+    }
+
+    50% {
+      transform: scale(1.1);
+    }
+  }
+
+  .nav-link {
+    font-weight: 500;
+    color: #4a5568;
+    transition: all 0.3s ease;
+    border-radius: 8px;
+    position: relative;
+  }
+
+  .nav-link:hover {
+    color: #667eea;
+    background: rgba(102, 126, 234, 0.1);
+    transform: translateY(-1px);
+  }
+
+  .nav-link.active {
+    color: #667eea;
+    background: rgba(102, 126, 234, 0.15);
+  }
+
+  .btn-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    padding: 0.6rem 1.5rem;
+    font-weight: 600;
+    border-radius: 25px;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+    transition: all 0.3s ease;
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+  }
+
+  .btn-outline-danger {
+    background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+    border: none;
+    color: white;
+    padding: 0.6rem 1.5rem;
+    font-weight: 600;
+    border-radius: 25px;
+    box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+    transition: all 0.3s ease;
+  }
+
+  .btn-outline-danger:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(255, 107, 107, 0.4);
+    color: white;
+  }
+</style>
+
+<nav class="navbar navbar-expand-lg navbar-light modern-navbar shadow-sm"
+  style="position:fixed; width:100%; z-index:999;">
   <div class="container">
     <!-- Brand -->
-    <a class="navbar-brand fw-bold text-primary" href="#">
-      <i class="bi bi-heart-pulse-fill me-1"></i> CareMate
+    <a class="navbar-brand fw-bold" href="#">
+      <i class="bi bi-heart-pulse-fill me-2"></i>CareMate
     </a>
 
     <!-- Mobile toggle -->
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
 
@@ -16,29 +109,41 @@
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav ms-auto align-items-lg-center">
         <li class="nav-item">
-          <a class="nav-link active fw-semibold" href="$">Home</a>
+          <a class="nav-link active fw-semibold" href="{% url 'home:doctor' %}">Home</a>
         </li>
+        <li class="nav-item">
+          <a class="nav-link active fw-semibold" href="#">appointments</a>
+        </li>
+        {% if request.user.doctor %}
+        <li class="nav-item">
+          <a class="nav-link active fw-semibold" href="{% url 'profile:profile_doctor' %}">profile</a>
+        </li>
+        {% else %}
+        <li class="nav-item">
+          <a class="nav-link active fw-semibold" href="{% url 'profile:profile_patient' %}">profile</a>
+        </li>
+        {% endif %}
 
         {% if request.user.is_authenticated %}
-          <!-- Show Logout when logged in -->
-          <li class="nav-item">
-            <form method="post" action="{% url 'account:logout' %}">
-              {% csrf_token %}
-              <button type="submit" class="btn btn-outline-danger ms-lg-3 px-3 rounded-pill">
-                Logout
-              </button>
-            </form>
-          </li>
+        <!-- Show Logout when logged in -->
+        <li class="nav-item">
+          <form method="post" action="{% url 'user_account:logout' %}">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-outline-danger ms-lg-3 px-3 rounded-pill">
+              Logout
+            </button>
+          </form>
+        </li>
         {% else %}
-          <!-- Show Sign Up + Login when logged out -->
-          <li class="nav-item">
-            <a class="nav-link fw-semibold" href="{% url 'account:sign-up' %}">Sign Up</a>
-          </li>
-          <li class="nav-item">
-            <a class="btn btn-primary ms-lg-3 px-3 rounded-pill" href="{% url 'account:login' %}">
-              Login
-            </a>
-          </li>
+        <!-- Show Sign Up + Login when logged out -->
+        <li class="nav-item">
+          <a class="nav-link fw-semibold" href="{% url 'user_account:sign-up' %}">Sign Up</a>
+        </li>
+        <li class="nav-item">
+          <a class="btn btn-primary ms-lg-3 px-3 rounded-pill" href="{% url 'user_account:login' %}">
+            Login
+          </a>
+        </li>
         {% endif %}
       </ul>
     </div>

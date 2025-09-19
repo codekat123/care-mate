@@ -5,8 +5,10 @@ from django.conf import settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('account/',include('account.urls',namespace='account')),
+    path('account/',include('user_account.urls',namespace='user_account')),
+    path('accounts/', include('allauth.urls')),
     path('profile/',include('profile_users.urls',namespace='profile')),
+    path('dashboard/',include('dashboard.urls',namespace='dashboard')),
     path('',include('home.urls',namespace='home')),
 ]
 

@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row">
+        <!-- Doctor Profile Card -->
+        <div class="col-md-5">
+            <div class="card shadow p-4">
+                <img src="{{ doctor.profile_image.url }}" class="img-fluid rounded mb-3" alt="{{ doctor.user.username }}">
+                <h3>Dr. {{ doctor.user.username }}</h3>
+                <p><strong>Major:</strong> {{ doctor.major }}</p>
+                <p><strong>Description:</strong> {{ doctor.major_description }}</p>
+                <p><strong>Consultation Fee:</strong> ${{ doctor.consultation_fee }}</p>
+                <p><strong>Work Time:</strong> {{ doctor.work_start_time }} - {{ doctor.work_end_time }}</p>
+                <p><strong>Phone:</strong> {{ doctor.phone_number }}</p>
+                <p><strong>Office:</strong> {{ doctor.location_medical_office }}</p>
+                <p>{{ doctor.bio }}</p>
+            </div>
+        </div>
+
+        <!-- Reservation Form -->
+        <div class="col-md-7">
+            <div class="card shadow p-4">
+                <h4 class="mb-4">Book an Appointment</h4>
+
+                {% if success %}
+                    <div class="alert alert-success">{{ success }}</div>
+                {% endif %}
+
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        {{ form.name.label_tag }}
+                        {{ form.name }}
+                        {% if form.name.errors %}
+                            <div class="text-danger small">{{ form.name.errors }}</div>
+                        {% endif %}
+                    </div>
+                    <div class="mb-3">
+                        {{ form.phone_number.label_tag }}
+                        {{ form.phone_number }}
+                        {% if form.phone_number.errors %}
+                            <div class="text-danger small">{{ form.phone_number.errors }}</div>
+                        {% endif %}
+                    </div>
+                    <button type="submit" class="btn btn-success w-100">Book Appointment</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

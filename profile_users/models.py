@@ -1,5 +1,5 @@
 from django.db import models
-from account.models import User
+from user_account.models import User
 from django.core.validators import MinValueValidator,MaxValueValidator
 
 class PatientProfile(models.Model):
@@ -14,7 +14,6 @@ class PatientProfile(models.Model):
         return f"Patient: {self.user.username}"
 
 
-
 class DoctorProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="doctor")
     major = models.CharField(max_length=200,blank=True, null=True)
@@ -22,6 +21,7 @@ class DoctorProfile(models.Model):
     consultation_fee = models.DecimalField(max_digits=7, decimal_places=2,blank=True,null=True)
     work_start_time = models.TimeField(null=True, blank=True)
     work_end_time = models.TimeField(null=True, blank=True)
+    location_medical_office = models.TextField(max_length=400,null=True,blank=True)
     phone_number = models.CharField(blank=True, null=True)
     bio = models.TextField(blank=True, null=True)
     profile_image = models.ImageField(default="doctors/doctor.jpeg",upload_to="doctors/", blank=True, null=True)

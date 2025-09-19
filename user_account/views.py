@@ -9,7 +9,7 @@ from .forms import SignUpForm
 class SignUp(CreateView):
      model = User
      form_class = SignUpForm
-     template_name = 'account/sign_up.html'
+     template_name = 'user_account/sign_up.html'
 
      def form_valid(self, form):
          user = form.save()
@@ -43,7 +43,7 @@ class SignUp(CreateView):
 
 
 class CustomLoginView(LoginView):
-    template_name = 'account/login.html'
+    template_name = 'user_account/login.html'
     redirect_authenticated_user = True
 
     def get_success_url(self):

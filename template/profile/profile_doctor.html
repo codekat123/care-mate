@@ -82,6 +82,13 @@
               </div>
             </div>
 
+            <div class="col-md-6">
+              <div class="p-3 bg-light rounded shadow-sm h-100">
+                <h6 class="fw-semibold mb-1"><i class="bi bi-telephone me-1 text-primary"></i> Phone Number</h6>
+                <p class="mb-0">{{ request.user.doctor.location_medical_office|default:"Not provided" }}</p>
+              </div>
+            </div>
+
           </div>
 
           <!-- Buttons -->

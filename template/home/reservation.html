@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="d-flex justify-content-center align-items-center" style="min-height: 100vh; background-color: #f9fafb;">
+  <div class="card shadow-lg p-4" style="max-width: 450px; width: 100%; border-radius: 20px;">
+    <h3 class="text-center mb-4" style="font-weight: 700; color: #22c55e;">
+      Book Appointment
+    </h3>
+
+    <form method="post" novalidate>
+      {% csrf_token %}
+
+      <!-- Name Field -->
+      <div class="mb-3">
+        <label for="id_name" class="form-label" style="font-weight: 600;">Full Name</label>
+        {{ form.name }}
+        {% if form.name.errors %}
+          <div class="text-danger small">{{ form.name.errors }}</div>
+        {% endif %}
+      </div>
+
+      <!-- Phone Number Field -->
+      <div class="mb-3">
+        <label for="id_phone_number" class="form-label" style="font-weight: 600;">Phone Number</label>
+        {{ form.phone_number }}
+        {% if form.phone_number.errors %}
+          <div class="text-danger small">{{ form.phone_number.errors }}</div>
+        {% endif %}
+      </div>
+
+      <!-- Submit Button -->
+      <button type="submit" class="btn w-100" 
+              style="background: #22c55e; color: white; font-weight: 600; padding: 12px; border-radius: 30px;">
+        Confirm Reservation
+      </button>
+    </form>
+  </div>
+</div>
+{% endblock %}

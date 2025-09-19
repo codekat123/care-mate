@@ -1,6 +1,6 @@
 from django import forms
 from .models import DoctorProfile , PatientProfile
-from account.models import User
+from user_account.models import User
 
 class UserForm(forms.ModelForm):
     class Meta:
