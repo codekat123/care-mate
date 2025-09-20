@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block title %}Confirm Delete{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+  <div class="card shadow-sm border-0">
+    <div class="card-body text-center">
+      <h3 class="text-danger">Are you sure?</h3>
+      <p>
+        You are about to delete the reservation 
+        <strong>{{ object.name }}</strong>  
+        with phone <strong>{{ object.phone_number }}</strong>.
+      </p>
+      <p>This action cannot be undone.</p>
+
+      <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Yes, Delete</button>
+        <a href="{% url 'dashboard:dashboard' %}" class="btn btn-secondary">Cancel</a>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

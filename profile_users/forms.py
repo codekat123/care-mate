@@ -10,7 +10,7 @@ class UserForm(forms.ModelForm):
 class DoctorProfileForm(forms.ModelForm):
     class Meta:
         model = DoctorProfile
-        fields = ["profile_image", "bio","major","major_description","consultation_fee","work_start_time","work_end_time","phone_number",]
+        fields = ["profile_image", "bio","major","major_description","consultation_fee","work_start_time","work_end_time","phone_number","location_medical_office"]
         widgets = {
                     "work_start_time": forms.TimeInput(attrs={"type": "time", "class": "form-control"}),
                     "work_end_time": forms.TimeInput(attrs={"type": "time", "class": "form-control"}),}
@@ -19,3 +19,6 @@ class PatientProfileForm(forms.ModelForm):
     class Meta:
         model = PatientProfile
         fields = ["profile_image", "gender","date_of_birthday","address","phone_number"]
+        widgets = {
+            'date_of_birthday': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
+        }

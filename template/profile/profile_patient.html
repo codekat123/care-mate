@@ -16,8 +16,8 @@
 
           <!-- Profile Image -->
           <div class="position-absolute top-0 start-50 translate-middle">
-            {% if request.user.patient.profile_image %}
-              <img src="{{ request.user.patient.profile_image.url }}" alt="Profile Image"
+            {% if patient.profile_image %}
+              <img src="{{ patient.profile_image.url }}" alt="Profile Image"
                    class="rounded-circle border border-3 border-white shadow"
                    style="width: 140px; height: 140px; object-fit: cover;">
             {% else %}
@@ -29,7 +29,7 @@
 
           <!-- Name and Role -->
           <div class="mt-5 pt-3">
-            <h3 class="fw-bold text-dark">{{ request.user.first_name }} {{ request.user.last_name }}</h3>
+            <h3 class="fw-bold text-dark">{{ patient.user.first_name }} {{ patient.user.last_name }}</h3>
             <p class="text-success fw-semibold mb-2"><i class="bi bi-person-hearts me-1"></i> Patient</p>
           </div>
 
@@ -38,7 +38,7 @@
             <div class="col-md-6">
               <div class="p-3 bg-light rounded shadow-sm h-100">
                 <h6 class="fw-semibold mb-1"><i class="bi bi-gender-ambiguous me-1 text-success"></i> Gender</h6>
-                <p class="mb-0">{{ request.user.patient.gender|default:"-" }}</p>
+                <p class="mb-0">{{ patient.gender|default:"-" }}</p>
               </div>
             </div>
             <div class="col-md-6">
@@ -50,23 +50,26 @@
             <div class="col-md-12">
               <div class="p-3 bg-light rounded shadow-sm h-100">
                 <h6 class="fw-semibold mb-1"><i class="bi bi-geo-alt me-1 text-success"></i> Address</h6>
-                <p class="mb-0">{{ request.user.patient.address|default:"-" }}</p>
+                <p class="mb-0">{{ patient.address|default:"-" }}</p>
               </div>
             </div>
             <div class="col-md-12">
               <div class="p-3 bg-light rounded shadow-sm h-100">
                 <h6 class="fw-semibold mb-1"><i class="bi bi-telephone me-1 text-success"></i> Phone Number</h6>
-                <p class="mb-0">{{request.user.patient.phone_number|default:"-" }}</p>
+                <p class="mb-0">{{ patient.phone_number|default:"-" }}</p>
               </div>
             </div>
           </div>
-
+        {% if request.user.patient %}
           <!-- Buttons -->
           <div class="d-flex justify-content-center gap-3 mt-4">
             <a href="{% url 'profile:edit_patient' %}" class="btn btn-outline-success rounded-pill px-4 shadow-sm">
               <i class="bi bi-pencil-square me-1"></i> Edit Profile
             </a>
           </div>
+        {% endif %}
+
+
 
         </div>
       </div>

@@ -108,17 +108,13 @@
     <!-- Links -->
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav ms-auto align-items-lg-center">
+        {% if request.resolver_match.url_name != 'dashboard' %}
         <li class="nav-item">
           <a class="nav-link active fw-semibold" href="{% url 'home:doctor' %}">Home</a>
         </li>
         <li class="nav-item">
           <a class="nav-link active fw-semibold" href="#">appointments</a>
         </li>
-        {% if request.user.doctor %}
-        <li class="nav-item">
-          <a class="nav-link active fw-semibold" href="{% url 'profile:profile_doctor' %}">profile</a>
-        </li>
-        {% else %}
         <li class="nav-item">
           <a class="nav-link active fw-semibold" href="{% url 'profile:profile_patient' %}">profile</a>
         </li>

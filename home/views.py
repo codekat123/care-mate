@@ -15,6 +15,11 @@ class HomeView(ListView):
      template_name = 'home/home.html'
      context_object_name = "doctors"
 
+     def get(self, *args, **kwargs):
+         if self.request.user.role == 'doctor':
+            return redirect('dashboard:dashboard')
+         return super().get(*args, **kwargs)
+
 @method_decorator(login_required(login_url='user_account:login'),name='dispatch')
 class DoctorDetials(DetailView):
      model = DoctorProfile

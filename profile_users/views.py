@@ -9,14 +9,6 @@ from django.contrib.auth.decorators import login_required
 from .forms import *
 from django.urls import reverse_lazy
 from datetime import date
-@method_decorator(login_required(login_url='user_account:login'),name='dispatch')
-class ProfileDoctor(ListView):
-     model = DoctorProfile
-     template_name = 'profile/profile_doctor.html'
-     context_object_name = 'doctor_profile'
-
-     def get_object(self,queryset=None):
-          return self.request.user.doctor
 
 
 @method_decorator(login_required(login_url='user_account:login'),name='dispatch')
@@ -33,13 +25,13 @@ class ProfilePatient(ListView):
         if not date_of_birth:
             return "-"
         today = date.today()
-        return today.year - date_of_birth.year - ((today.month, today.day) < (date_of_birth.month, date_of_birth.day))
-
+        age = today.year - date_of_birth.year - ((today.month, today.day) < (date_of_birth.month, date_of_birth.day))
+        return age
      def get_context_data(self,**kwargs):
          context = super().get_context_data(**kwargs)
          patient_profile = self.request.user.patient
          print(patient_profile)
-         context['patient_profile'] = patient_profile
+         context['patient'] = patient_profile
          context['age'] = self.calculate_age(patient_profile.date_of_birthday)  
 
 @method_decorator(login_required(login_url='user_account:login'), name='dispatch')
@@ -71,13 +63,6 @@ class BaseProfileUpdateView(UpdateView):
         else:
             return self.render_to_response(context)
 
-
-class DoctorProfileUpdateView(BaseProfileUpdateView):
-    user_form_class = UserForm
-    form_class = DoctorProfileForm
-    template_name = 'profile/edit_doctor.html'
-    model_field = 'doctor'
-    success_url = reverse_lazy('profile:profile_doctor')
 
 class PatientProfileUpdateView(BaseProfileUpdateView):
     user_form_class = UserForm

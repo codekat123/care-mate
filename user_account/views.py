@@ -22,7 +22,7 @@ class SignUp(CreateView):
          if authenticated_user is not None:
              login(self.request, authenticated_user)
              if authenticated_user.role == 'doctor':
-                 return redirect('profile:profile_doctor')
+                 return redirect('dashboard:dashboard')
              return redirect('profile:profile_patient')
      
          return super().form_invalid(form)
@@ -31,13 +31,13 @@ class SignUp(CreateView):
      
      def get_success_url(self):
           if self.request.user.role == 'doctor':
-               return reverse_lazy('profile:profile_doctor')
+               return reverse_lazy('dashboard:dashboard')
           return reverse_lazy('profile:profile_patient')
 
      def get(self, *args, **kwargs):
         if self.request.user.is_authenticated:
           if self.request.user.role == 'doctor':
-            return redirect('profile:profile_doctor')
+            return redirect('dashboard:dashboard')
           return redirect('profile:profile_patient')
         return super().get(*args, **kwargs)
 
@@ -49,12 +49,12 @@ class CustomLoginView(LoginView):
     def get_success_url(self):
           
           if self.request.user.role == 'doctor':
-               return reverse_lazy('profile:profile_doctor')
+               return reverse_lazy('dashboard:dashboard')
           return reverse_lazy('profile:profile_patient')
 
     def get(self, *args, **kwargs):
         if self.request.user.is_authenticated:
           if self.request.user.role == 'doctor':
-            return redirect('profile:profile_doctor')
+            return redirect('dashboard:dashboard')
           return redirect('profile:profile_patient')
         return super().get(*args, **kwargs)
