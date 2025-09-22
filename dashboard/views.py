@@ -76,3 +76,10 @@ class PatientProfileDashboard(DetailView):
           context['patient'] = patient
           context['age'] = self.calculate_age(patient.date_of_birthday)
           return context
+
+
+class ScheduleAppointment(UpdateView):
+     model = Reservation
+     fields = ['appointment']
+     template_name = 'dashboard/dashboard_doctor.html'
+     success_url = reverse_lazy("dashboard:dashboard")

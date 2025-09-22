@@ -1,4 +1,5 @@
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -25,6 +26,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'channels',
       # needed for allauth
     'django.contrib.sites',
 
@@ -41,6 +43,8 @@ INSTALLED_APPS = [
     'profile_users',
     'dashboard',
     'home',
+    'ai_assistant',
+    'chat',
 ]
 SITE_ID = 1
 
@@ -73,6 +77,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'src.wsgi.application'
+ASGI_APPLICATION = 'src.asgi.application'
 
 
 # Database
@@ -136,3 +141,15 @@ AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',  # default
     'allauth.account.auth_backends.AuthenticationBackend',  # allauth
 ]
+GEMINI_API_KEY = 'AIzaSyCc2uXPIPTMl3WGVx8bMyo5RTmw6AkBLdE'
+
+# Channels / Redis (websocket layer)
+REDIS_URL = os.getenv('REDIS_URL', 'redis://127.0.0.1:6379/1')
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            'hosts': [REDIS_URL],
+        },
+    },
+}

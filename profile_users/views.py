@@ -1,4 +1,5 @@
 from django.shortcuts import render , redirect
+from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
 from django.views.generic.edit import UpdateView
 from .models import DoctorProfile , PatientProfile
@@ -9,13 +10,13 @@ from django.contrib.auth.decorators import login_required
 from .forms import *
 from django.urls import reverse_lazy
 from datetime import date
-
+from home.models import Reservation
 
 @method_decorator(login_required(login_url='user_account:login'),name='dispatch')
-class ProfilePatient(ListView):
+class ProfilePatient(DetailView):
      model = PatientProfile
      template_name = 'profile/profile_patient.html'
-     context_object_name = 'patient_profile'
+     context_object_name = 'patient'
 
      def get_object(self):
           return self.request.user.patient
@@ -27,12 +28,14 @@ class ProfilePatient(ListView):
         today = date.today()
         age = today.year - date_of_birth.year - ((today.month, today.day) < (date_of_birth.month, date_of_birth.day))
         return age
-     def get_context_data(self,**kwargs):
+     
+     def get_context_data(self, **kwargs):
          context = super().get_context_data(**kwargs)
-         patient_profile = self.request.user.patient
+         patient_profile = self.get_object()
          print(patient_profile)
          context['patient'] = patient_profile
-         context['age'] = self.calculate_age(patient_profile.date_of_birthday)  
+         context['age'] = self.calculate_age(patient_profile.date_of_birthday)
+         return context  
 
 @method_decorator(login_required(login_url='user_account:login'), name='dispatch')
 class BaseProfileUpdateView(UpdateView):
@@ -70,3 +73,8 @@ class PatientProfileUpdateView(BaseProfileUpdateView):
     template_name = 'profile/edit_patient.html'
     model_field = 'patient'
     success_url = reverse_lazy('profile:profile_patient')
+
+
+class ShowAppointment(ListView):
+    model = Reservation
+    template_name = 'home/reservation_list.html'

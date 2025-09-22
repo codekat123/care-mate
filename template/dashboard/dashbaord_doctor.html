@@ -159,6 +159,25 @@
                                         <i class="bi bi-trash me-1"></i> Delete
                                     </a>
                                 </div>
+                                <!-- Schedule form -->
+                                <div class="mt-3">
+                                    <form method="post" action="{% url 'dashboard:schedule' appointment.id %}"
+                                        class="d-flex gap-2">
+                                        {% csrf_token %}
+                                        <div class="input-group">
+                                            <span class="input-group-text">
+                                                <i class="bi bi-clock"></i>
+                                            </span>
+                                            <input type="datetime-local" name="appointment"
+                                                value="{{ appointment.appointment|date:'Y-m-d\\TH:i' }}"
+                                                class="form-control rounded-start-0">
+                                        </div>
+                                        <button type="submit" class="btn btn-warning">
+                                            <i class="bi bi-calendar-check me-1"></i> Schedule
+                                        </button>
+                                    </form>
+                                </div>
+
 
                             </div>
                             {% endfor %}

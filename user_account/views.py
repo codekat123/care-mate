@@ -6,6 +6,8 @@ from django.views.generic.edit import CreateView
 from .models import User
 from .forms import SignUpForm
 
+
+
 class SignUp(CreateView):
      model = User
      form_class = SignUpForm
@@ -58,3 +60,9 @@ class CustomLoginView(LoginView):
             return redirect('dashboard:dashboard')
           return redirect('profile:profile_patient')
         return super().get(*args, **kwargs)
+
+
+
+
+
+

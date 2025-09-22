@@ -51,3 +51,5 @@ class DoctorDetials(DetailView):
             return self.render_to_response(context)
 
 
+
+
