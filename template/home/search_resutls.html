@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-5">
+  <!-- Title -->
+  <h3 class="fw-bold text-indigo-600 mb-4">
+    Search results for "<span class="text-purple-600">{{ request.GET.q }}</span>"
+  </h3>
+
+  {% if user_list %}
+    <div class="row g-4">
+      {% for doctor in user_list %}
+        {% if doctor.role == "doctor" and doctor.doctor %}
+        <div class="col-md-4">
+          <div class="card shadow-sm border-0 rounded-3 h-100 hover-card">
+            <!-- Profile Image -->
+            <img src="{{ doctor.doctor.profile_image.url }}" class="card-img-top rounded-top" alt="Doctor Image" style="height:220px; object-fit:cover;">
+            
+            <div class="card-body">
+              <!-- Name -->
+              <h5 class="card-title fw-bold mb-1">Dr. {{ doctor.get_full_name }}</h5>
+              <p class="text-muted mb-2">{{ doctor.doctor.major }}</p>
+              
+              <!-- Bio -->
+              {% if doctor.doctor.bio %}
+                <p class="small text-secondary">{{ doctor.doctor.bio|truncatechars:100 }}</p>
+              {% endif %}
+
+              <!-- Consultation Fee -->
+              {% if doctor.doctor.consultation_fee %}
+              <p class="mb-2">
+                <i class="bi bi-cash-coin text-success me-1"></i> 
+                {{ doctor.doctor.consultation_fee }} EGP
+              </p>
+              {% endif %}
+
+              <!-- Location -->
+              {% if doctor.doctor.location_medical_office %}
+              <p class="mb-2">
+                <i class="bi bi-geo-alt text-danger me-1"></i> 
+                {{ doctor.doctor.location_medical_office|truncatechars:40 }}
+              </p>
+              {% endif %}
+
+              <!-- Phone -->
+              {% if doctor.doctor.phone_number %}
+              <p class="mb-3">
+                <i class="bi bi-telephone text-primary me-1"></i> 
+                {{ doctor.doctor.phone_number }}
+              </p>
+              {% endif %}
+
+              <!-- Button -->
+              <a href="{% url 'profile:profile_patient' %}?doctor={{ doctor.id }}" class="btn btn-primary w-100 rounded-pill">
+                View Profile
+              </a>
+            </div>
+          </div>
+        </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="alert alert-warning rounded-3 shadow-sm">
+      <i class="bi bi-exclamation-circle me-2"></i>
+      No results found.
+    </div>
+  {% endif %}
+</div>
+
+<style>
+  .text-indigo-600 { color: #667eea !important; }
+  .text-purple-600 { color: #764ba2 !important; }
+  .hover-card { transition: all 0.3s ease; }
+  .hover-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(102, 126, 234, 0.2); }
+</style>
+{% endblock %}

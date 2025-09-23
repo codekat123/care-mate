@@ -8,7 +8,7 @@ from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from .models import Reservation
 from .forms import ReservationForm
-
+from user_account.models import User
 @method_decorator(login_required(login_url='user_account:login'),name='dispatch')
 class HomeView(ListView):
      model = DoctorProfile
@@ -51,5 +51,17 @@ class DoctorDetials(DetailView):
             return self.render_to_response(context)
 
 
+class SearchView(ListView):
+    model = User
+    template_name = 'home/search_resutls.html'
 
+    def get_queryset(self):
+        query = self.request.GET.get('q')
+        if query:
+            result = User.objects.filter(first_name__icontains=query,role='doctor')
+            return result
+        
+    def get_context_data(self,*arg,**kwargs):
+        context = super().get_context_data(**kwargs)
+        return context
 

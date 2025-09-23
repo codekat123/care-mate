@@ -5,7 +5,7 @@ from django.contrib.auth.views import LoginView
 from django.views.generic.edit import CreateView
 from .models import User
 from .forms import SignUpForm
-
+from django.contrib import messages
 
 
 class SignUp(CreateView):
@@ -25,22 +25,23 @@ class SignUp(CreateView):
              login(self.request, authenticated_user)
              if authenticated_user.role == 'doctor':
                  return redirect('dashboard:dashboard')
-             return redirect('profile:profile_patient')
+             return redirect('home:doctor')
      
          return super().form_invalid(form)
 
 
      
      def get_success_url(self):
+          messages.warning(self.request,'please complete your info from profile section')
           if self.request.user.role == 'doctor':
                return reverse_lazy('dashboard:dashboard')
-          return reverse_lazy('profile:profile_patient')
+          return reverse_lazy('home:doctor')
 
      def get(self, *args, **kwargs):
         if self.request.user.is_authenticated:
           if self.request.user.role == 'doctor':
             return redirect('dashboard:dashboard')
-          return redirect('profile:profile_patient')
+          return redirect('home:doctor')
         return super().get(*args, **kwargs)
 
 
@@ -52,13 +53,13 @@ class CustomLoginView(LoginView):
           
           if self.request.user.role == 'doctor':
                return reverse_lazy('dashboard:dashboard')
-          return reverse_lazy('profile:profile_patient')
+          return reverse_lazy('home:doctor')
 
     def get(self, *args, **kwargs):
         if self.request.user.is_authenticated:
           if self.request.user.role == 'doctor':
             return redirect('dashboard:dashboard')
-          return redirect('profile:profile_patient')
+          return redirect('home:doctor')
         return super().get(*args, **kwargs)
 
 

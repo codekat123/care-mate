@@ -6,7 +6,8 @@
         <!-- Doctor Profile Card -->
         <div class="col-md-5">
             <div class="card shadow p-4">
-                <img src="{{ doctor.profile_image.url }}" class="img-fluid rounded mb-3" alt="{{ doctor.user.username }}">
+                <img src="{{ doctor.profile_image.url }}" class="img-fluid rounded mb-3"
+                    alt="{{ doctor.user.username }}">
                 <h3>Dr. {{ doctor.user.username }}</h3>
                 <p><strong>Major:</strong> {{ doctor.major }}</p>
                 <p><strong>Description:</strong> {{ doctor.major_description }}</p>
@@ -24,7 +25,7 @@
                 <h4 class="mb-4">Book an Appointment</h4>
 
                 {% if success %}
-                    <div class="alert alert-success">{{ success }}</div>
+                <div class="alert alert-success">{{ success }}</div>
                 {% endif %}
 
                 <form method="post">
@@ -33,18 +34,24 @@
                         {{ form.name.label_tag }}
                         {{ form.name }}
                         {% if form.name.errors %}
-                            <div class="text-danger small">{{ form.name.errors }}</div>
+                        <div class="text-danger small">{{ form.name.errors }}</div>
                         {% endif %}
                     </div>
                     <div class="mb-3">
                         {{ form.phone_number.label_tag }}
                         {{ form.phone_number }}
                         {% if form.phone_number.errors %}
-                            <div class="text-danger small">{{ form.phone_number.errors }}</div>
+                        <div class="text-danger small">{{ form.phone_number.errors }}</div>
                         {% endif %}
                     </div>
                     <button type="submit" class="btn btn-success w-100">Book Appointment</button>
                 </form>
+                <div>
+                    {% if request.user.is_authenticated and request.user.role == 'patient' and request.user.id != doctor.user.id %}
+                    <a href="{% url 'chat:start' other_user_id=doctor.user.id %}"
+                        class="btn btn-primary w-100 mt-2">Message Doctor</a>
+                    {% endif %}
+                </div>
             </div>
         </div>
     </div>

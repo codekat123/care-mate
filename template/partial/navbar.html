@@ -89,6 +89,40 @@
     box-shadow: 0 8px 25px rgba(255, 107, 107, 0.4);
     color: white;
   }
+
+  /* Search Box Styling */
+  .search-box {
+    position: relative;
+    width: 250px;
+  }
+
+  .search-box input {
+    width: 100%;
+    padding: 0.6rem 1rem 0.6rem 2.5rem;
+    border-radius: 25px;
+    border: 1px solid rgba(102, 126, 234, 0.3);
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(6px);
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+  }
+
+  .search-box input:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 8px rgba(102, 126, 234, 0.4);
+    outline: none;
+  }
+
+  .search-box svg {
+    position: absolute;
+    top: 50%;
+    left: 12px;
+    transform: translateY(-50%);
+    width: 18px;
+    height: 18px;
+    color: #667eea;
+    pointer-events: none;
+  }
 </style>
 
 <nav class="navbar navbar-expand-lg navbar-light modern-navbar shadow-sm"
@@ -109,6 +143,17 @@
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav ms-auto align-items-lg-center">
         {% if request.resolver_match.url_name != 'dashboard' %}
+        <li class="nav-item">
+          <form method="GET" action="{% url 'home:search' %}" class="search-box">
+            <input type="text" name="q" placeholder="Search...">
+            <!-- Search icon -->
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M21 21l-4.35-4.35M17 11a6 6 0 11-12 0 6 6 0 0112 0z" />
+            </svg>
+          </form>
+        </li>
+
         <li class="nav-item">
           <a class="nav-link active fw-semibold" href="{% url 'home:doctor' %}">Home</a>
         </li>
@@ -141,6 +186,7 @@
           </a>
         </li>
         {% endif %}
+        </li>
       </ul>
     </div>
   </div>

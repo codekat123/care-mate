@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div style="max-width: 900px; margin: 0 auto; padding: 20px; margin-top: 60px;">
+  <h2 style="margin-bottom:16px;">
+    Conversation #{{ conversation.id }}
+  </h2>
+
+  <div id="messages" style="height: 480px; overflow-y:auto; border:1px solid #e5e7eb; border-radius: 8px; padding: 12px;">
+    {% for m in messages %}
+      <div style="margin-bottom: 8px; text-align: {% if m.sender_id == request.user.id %}right{% else %}left{% endif %};">
+        <div style="display:inline-block; max-width: 70%; padding: 8px 12px; border-radius: 14px;
+          background: {% if m.sender_id == request.user.id %}#3b82f6; color:white;{% else %}#f3f4f6; color:#111827;{% endif %}">
+          {{ m.content }}
+        </div>
+        <div style="font-size: 11px; color:#6b7280; margin-top: 4px;">
+          {{ m.created_at|date:"Y-m-d H:i" }}
+        </div>
+      </div>
+    {% empty %}
+      <p>No messages yet. Say hi!</p>
+    {% endfor %}
+  </div>
+
+  <form id="chat-form" style="display:flex; gap: 8px; margin-top: 12px;">
+    <input id="chat-input" type="text" placeholder="Type a message..."
+           style="flex:1; padding: 10px 12px; border:1px solid #e5e7eb; border-radius: 8px;">
+    <button type="submit" style="padding: 10px 16px; border:none; background:#10b981; color:white; border-radius: 8px;">
+      Send
+    </button>
+  </form>
+</div>
+
+<script>
+(function() {
+  const conversationId = {{ conversation.id }};
+  const messagesEl = document.getElementById('messages');
+  const inputEl = document.getElementById('chat-input');
+  const formEl = document.getElementById('chat-form');
+
+  const protocol = window.location.protocol === 'https:' ? 'wss' : 'ws';
+  const wsUrl = `${protocol}://${window.location.host}/ws/chat/${conversationId}/`;
+  const socket = new WebSocket(wsUrl);
+
+  socket.onmessage = (event) => {
+    const data = JSON.parse(event.data);
+    appendMessage(data.content, data.sender_id === {{ request.user.id }} ? 'me' : 'other', data.created_at);
+  };
+
+  formEl.addEventListener('submit', function(e) {
+    e.preventDefault();
+    const text = (inputEl.value || '').trim();
+    if (!text) return;
+    socket.send(JSON.stringify({ content: text }));
+    inputEl.value = '';
+  });
+
+  function appendMessage(content, who, createdAt) {
+    const wrap = document.createElement('div');
+    wrap.style.marginBottom = '8px';
+    wrap.style.textAlign = who === 'me' ? 'right' : 'left';
+
+    const bubble = document.createElement('div');
+    bubble.style.display = 'inline-block';
+    bubble.style.maxWidth = '70%';
+    bubble.style.padding = '8px 12px';
+    bubble.style.borderRadius = '14px';
+    bubble.style.background = who === 'me' ? '#3b82f6' : '#f3f4f6';
+    bubble.style.color = who === 'me' ? 'white' : '#111827';
+    bubble.textContent = content;
+
+    const ts = document.createElement('div');
+    ts.style.fontSize = '11px';
+    ts.style.color = '#6b7280';
+    ts.style.marginTop = '4px';
+    ts.textContent = createdAt ? new Date(createdAt).toLocaleString() : new Date().toLocaleString();
+
+    wrap.appendChild(bubble);
+    wrap.appendChild(ts);
+    messagesEl.appendChild(wrap);
+    messagesEl.scrollTop = messagesEl.scrollHeight;
+  }
+})();
+</script>
+
+{% endblock %}
+
+

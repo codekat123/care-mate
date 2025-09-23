@@ -8,7 +8,17 @@
         <h1 style="color: #2c5282; font-size: 2.5em; margin-bottom: 10px;">🩺 Doctor Directory</h1>
         <p style="color: #666; font-size: 1.1em;">Find the best specialized doctors in your area</p>
     </div>
-    <!-- Add this to template/home/home.html after the header section -->
+    {% if messages %}
+    <div class="container mt-3">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
     <div
         style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 15px; padding: 25px; margin-bottom: 30px; text-align: center; color: white;">
         <h2 style="margin-bottom: 15px;">🤖 Need Help Deciding?</h2>
@@ -20,48 +30,9 @@
         </a>
     </div>
 
-    <!-- Search Filters -->
-    <div
-        style="background: white; border-radius: 15px; padding: 25px; margin-bottom: 30px; box-shadow: 0 5px 20px rgba(0,0,0,0.08);">
-        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr auto; gap: 15px; align-items: end;">
-            <div>
-                <label style="display: block; margin-bottom: 8px; color: #4a5568; font-weight: 600;">Specialty</label>
-                <select
-                    style="width: 100%; padding: 12px 15px; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 14px;">
-                    <option value="">All Specialties</option>
-                    <!-- Add your major options here -->
-                </select>
-            </div>
-            <div>
-                <label style="display: block; margin-bottom: 8px; color: #4a5568; font-weight: 600;">Location</label>
-                <select
-                    style="width: 100%; padding: 12px 15px; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 14px;">
-                    <option value="">All Locations</option>
-                    <!-- Add your location options here -->
-                </select>
-            </div>
-            <div>
-                <label style="display: block; margin-bottom: 8px; color: #4a5568; font-weight: 600;">Doctor Name</label>
-                <input type="text" placeholder="Search by doctor name..."
-                    style="width: 100%; padding: 12px 15px; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 14px;">
-            </div>
-            <div>
-                <label style="display: block; margin-bottom: 8px; color: #4a5568; font-weight: 600;">Consultation
-                    Fee</label>
-                <select
-                    style="width: 100%; padding: 12px 15px; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 14px;">
-                    <option value="">All Prices</option>
-                    <option value="0-200">Under $200</option>
-                    <option value="200-500">$200-$500</option>
-                    <option value="500+">Over $500</option>
-                </select>
-            </div>
-            <button
-                style="background: #22c55e; color: white; border: none; padding: 12px 25px; border-radius: 10px; font-size: 16px; font-weight: 600; cursor: pointer; height: fit-content;">Search</button>
-        </div>
-    </div>
 
-    <!-- Doctors Grid -->
+
+
     <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(380px, 1fr)); gap: 25px;">
         {% for doctor in doctors %}
         <div
@@ -76,9 +47,11 @@
 
                 <div>
                     <h3 style="color: #1e40af; font-size: 1.4em; margin-bottom: 8px; font-weight: 700;">Dr.
-                        {{ doctor.user.get_full_name }}</h3>
+                        {{ doctor.user.get_full_name }}
+                    </h3>
                     <div style="color: #059669; font-weight: 600; font-size: 1em; margin-bottom: 5px;">
-                        {{ doctor.major }}</div>
+                        {{ doctor.major }}
+                    </div>
                     <div style="color: #6b7280; font-size: 0.9em; line-height: 1.4;">{{ doctor.major_description }}
                     </div>
                 </div>
