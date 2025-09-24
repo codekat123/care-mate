@@ -77,7 +77,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
     @database_sync_to_async
     def is_user_in_conversation(self, conversation, user):
-        return conversation.doctor_id == user.id or conversation.patient_id == user.id
+        return conversation.doctor.id == user.id or conversation.patient.id == user.id
 
     @database_sync_to_async
     def create_message(self, conversation_id, user_id, content):

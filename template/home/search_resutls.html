@@ -50,7 +50,7 @@
               {% endif %}
 
               <!-- Button -->
-              <a href="{% url 'profile:profile_patient' %}?doctor={{ doctor.id }}" class="btn btn-primary w-100 rounded-pill">
+              <a href="{% url 'home:detials' doctor.doctor.id%}" class="btn btn-primary w-100 rounded-pill">
                 View Profile
               </a>
             </div>

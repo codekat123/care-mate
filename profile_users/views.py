@@ -78,3 +78,6 @@ class PatientProfileUpdateView(BaseProfileUpdateView):
 class ShowAppointment(ListView):
     model = Reservation
     template_name = 'home/reservation_list.html'
+
+    def get_queryset(self):
+        return Reservation.objects.filter(patient=self.request.user.patient)

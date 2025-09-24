@@ -25,18 +25,35 @@
                             <i class="bi bi-bell"></i>
                             <span
                                 class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                                0
+                                {{count_of_notifications}}
                             </span>
                         </button>
                         <ul class="dropdown-menu dropdown-menu-end">
                             <li>
                                 <h6 class="dropdown-header">Notifications</h6>
                             </li>
-                            <li><a class="dropdown-item" href="#">No new notifications</a></li>
+                            {% for n in notifications %}
+                            <li><a class="dropdown-item" href="{% url 'chat:room' n.conversation.id %}">{{n.content}}</a></li>
+                            {% endfor %}
                         </ul>
-                        <button class="btn btn-outline-secondary btn-sm">
-                            <i class="bi bi-gear"></i>
-                        </button>
+                        <a href="{% url 'dashboard:update' %}"> <button class="btn btn-outline-secondary btn-sm">
+                                <i class="bi bi-gear"></i>
+                            </button></a>
+                        <a href="{% url 'chat:doctor_conversations' %}" style="text-decoration: none;">
+                            <button style="
+      background-color: #3b82f6;
+      color: white;
+      padding: 8px 16px;
+      border: none;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+    ">
+                                Chat 💬
+                            </button>
+                        </a>
+
                     </div>
                 </div>
             </div>

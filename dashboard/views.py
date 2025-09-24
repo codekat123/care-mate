@@ -10,7 +10,7 @@ from home.models import Reservation
 from django.views.generic.edit import UpdateView
 from django.views.decorators.http import require_POST
 from datetime import date
-
+from chat.models import Message
 
 
 
@@ -30,10 +30,12 @@ class DoctorDashBoard(DetailView):
          context['appointments'] = Reservation.objects.filter(doctor=self.request.user.doctor)
          context['count_of_reservation'] = Reservation.objects.filter(doctor=self.request.user.doctor).count()
          context['doctor_Profile'] = self.object
+         context['count_of_notifications'] = Message.objects.filter(sender=self.request.user).count()
+         context['notifications'] = Message.objects.filter(sender=self.request.user).order_by('-created_at')[:7]
          return context
 
 
-
+@method_decorator(login_required(login_url='user_account:login'),name='dispatch')
 class DoctorProfileUpdateView(BaseProfileUpdateView):
     user_form_class = UserForm
     form_class = DoctorProfileForm
@@ -56,7 +58,7 @@ def approve_appointment(request,id):
      approve.save()
      return redirect('/')
 
-
+@method_decorator(login_required(login_url='user_account:login'),name='dispatch')
 class PatientProfileDashboard(DetailView):
      model = PatientProfile
      template_name = 'profile/profile_patient.html'
@@ -77,7 +79,7 @@ class PatientProfileDashboard(DetailView):
           context['age'] = self.calculate_age(patient.date_of_birthday)
           return context
 
-
+@method_decorator(login_required(login_url='user_account:login'),name='dispatch')
 class ScheduleAppointment(UpdateView):
      model = Reservation
      fields = ['appointment']
