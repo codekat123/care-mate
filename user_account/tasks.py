@@ -16,14 +16,25 @@ def send_reset_email(subject, message, from_email, recipient_list, html_message=
     )
 
 @shared_task
-def send_validation_email(domain,protocal,uid,token,name,user_email):
-    subject = 'please active your email'
-    activation_link = f"{protocal}://{domain}{reverse('user_account:verify_email',args=[token,uid])}"
+def send_validation_email(domain, protocal, uid, token, name, user_email):
+    subject = 'Please activate your email'
+    activation_link = f"{protocal}://{domain}{reverse('user_account:verify_email', args=[token, uid])}"
     context = {
-        'name':name,
-        'link':activation_link,
+        'name': name,
+        'link': activation_link,
     }
-    message = render_to_string('user_account/activation.html',context)
-    mail = EmailMultiAlternatives(subject,message,settings.DEFAULT_FROM_EMAIL,user_email)
-    mail.attach_alternative(message,'text/html')
-    mail.send()
+    message = render_to_string('user_account/activation.html', context)
+
+    try:
+        mail = EmailMultiAlternatives(
+            subject,
+            message,
+            settings.DEFAULT_FROM_EMAIL,
+            [user_email]
+        )
+        mail.attach_alternative(message, 'text/html')
+        mail.send(fail_silently=False)  
+        print(f"✅ Email sent successfully to {user_email}")
+    except Exception as e:
+        print(f"❌ Failed to send email to {user_email}: {e}")
+        raise e   

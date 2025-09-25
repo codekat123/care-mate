@@ -19,20 +19,21 @@ class SignUp(CreateView):
 
      def form_valid(self, form):
          user = form.save(commit=False)
-         user.active = False
+         user.is_active = False
          user.save() 
          protocal = 'https' if self.request.is_secure() else 'http'
          domain = self.request.get_host()
          uid = urlsafe_base64_encode(force_bytes(user.id))
          token = default_token_generator.make_token(user)
          send_validation_email.delay(domain,protocal,uid,token,user.first_name,user.email)
+         
          return super().form_valid(form)
 
 
 
      
      def get_success_url(self):
-          messages.success(self.request,'please complete your info from profile section')
+          messages.success(self.request,'chcek your email to active your account')
           return reverse_lazy('user_account:login')
 
      def get(self, *args, **kwargs):
@@ -48,7 +49,7 @@ class CustomLoginView(LoginView):
     redirect_authenticated_user = True
 
     def get_success_url(self):
-          
+          messages.warning(self.request,'please complete your info in the profile section')
           if self.request.user.role == 'doctor':
                return reverse_lazy('dashboard:dashboard')
           return reverse_lazy('home:doctor')
@@ -78,7 +79,8 @@ def verify_email(request,token,uid):
     user = User.objects.get(id)
 
     if user is not None and default_token_generator.check_token(user,token):
-        user.active = True
+        user.is_active = True
+        messages.success(request,'your account has been activated')
         return redirect('user_account:login')
     
     messages.error(request,'somthing went wrong')

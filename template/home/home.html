@@ -3,21 +3,12 @@
 
 <div style="max-width: 1200px; margin: 0 auto; padding: 20px; margin-top: 80px;">
     <!-- Header Section -->
+     {% include 'partial/alert.html' %}
     <div
         style="background: white; border-radius: 15px; padding: 30px; margin-bottom: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); text-align: center;">
         <h1 style="color: #2c5282; font-size: 2.5em; margin-bottom: 10px;">🩺 Doctor Directory</h1>
         <p style="color: #666; font-size: 1.1em;">Find the best specialized doctors in your area</p>
     </div>
-    {% if messages %}
-    <div class="container mt-3">
-        {% for message in messages %}
-        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
-            {{ message }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-        {% endfor %}
-    </div>
-    {% endif %}
 
     <div
         style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 15px; padding: 25px; margin-bottom: 30px; text-align: center; color: white;">

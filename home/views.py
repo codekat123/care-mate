@@ -14,6 +14,8 @@ class HomeView(ListView):
      model = DoctorProfile
      template_name = 'home/home.html'
      context_object_name = "doctors"
+     def get_queryset(self):
+         return DoctorProfile.objects.filter(user__is_active=True)
 
      def get(self, *args, **kwargs):
          if self.request.user.role == 'doctor':
