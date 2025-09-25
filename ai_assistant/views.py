@@ -1,4 +1,3 @@
-
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
@@ -9,7 +8,7 @@ from django.views import View
 import json
 
 from .models import AIConversation, AIMessage
-from .service import GeminiMedicalAssistant
+from .tasks import analyze_symptoms_task
 
 
 @method_decorator(login_required, name="dispatch")
@@ -57,9 +56,18 @@ def send_message(request):
             id__lt=user_msg.id
         ).order_by("-timestamp")[:10]
 
-        
-        ai_service = GeminiMedicalAssistant()
-        ai_response = ai_service.analyze_symptoms(user_message,recent_messages)
+        # Build a lightweight history list for the Celery task
+        recent_messages_list = [
+            {"message_type": m.message_type, "content": m.content}
+            for m in recent_messages
+        ]
+
+        # Enqueue the task and wait briefly for the result
+        # For production, prefer returning 202 and streaming via WebSocket
+        async_result = analyze_symptoms_task.apply_async(
+            args=[user_message, recent_messages_list]
+        )
+        ai_response = async_result.get(timeout=20)
 
        
         ai_msg = AIMessage.objects.create(

@@ -1,181 +1,87 @@
-{% load static %}
-<style>
-  .modern-navbar {
-    background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(10px);
-    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-    transition: all 0.3s ease;
-  }
-
-  .nav-item {
-    margin-left: 10px;
-  }
-
-  .navbar-brand {
-    font-size: 1.5rem;
-    font-weight: 700;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    text-decoration: none;
-  }
-
-  .navbar-brand i {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    animation: pulse 2s infinite;
-  }
-
-  @keyframes pulse {
-
-    0%,
-    100% {
-      transform: scale(1);
-    }
-
-    50% {
-      transform: scale(1.1);
-    }
-  }
-
-  .nav-link {
-    font-weight: 500;
-    color: #4a5568;
-    transition: all 0.3s ease;
-    border-radius: 8px;
-    position: relative;
-  }
-
-  .nav-link:hover {
-    color: #667eea;
-    background: rgba(102, 126, 234, 0.1);
-    transform: translateY(-1px);
-  }
-
-  .nav-link.active {
-    color: #667eea;
-    background: rgba(102, 126, 234, 0.15);
-  }
-
-  .btn-primary {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    border: none;
-    padding: 0.6rem 1.5rem;
-    font-weight: 600;
-    border-radius: 25px;
-    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
-    transition: all 0.3s ease;
-  }
-
-  .btn-primary:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
-  }
-
-  .btn-outline-danger {
-    background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
-    border: none;
-    color: white;
-    padding: 0.6rem 1.5rem;
-    font-weight: 600;
-    border-radius: 25px;
-    box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
-    transition: all 0.3s ease;
-  }
-
-  .btn-outline-danger:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(255, 107, 107, 0.4);
-    color: white;
-  }
-
-  /* Search Box Styling */
-  .search-box {
-    position: relative;
-    width: 250px;
-  }
-
-  .search-box input {
-    width: 100%;
-    padding: 0.6rem 1rem 0.6rem 2.5rem;
-    border-radius: 25px;
-    border: 1px solid rgba(102, 126, 234, 0.3);
-    background: rgba(255, 255, 255, 0.7);
-    backdrop-filter: blur(6px);
-    font-size: 0.9rem;
-    transition: all 0.3s ease;
-  }
-
-  .search-box input:focus {
-    border-color: #667eea;
-    box-shadow: 0 0 8px rgba(102, 126, 234, 0.4);
-    outline: none;
-  }
-
-  .search-box svg {
-    position: absolute;
-    top: 50%;
-    left: 12px;
-    transform: translateY(-50%);
-    width: 18px;
-    height: 18px;
-    color: #667eea;
-    pointer-events: none;
-  }
-</style>
-
-<nav class="navbar navbar-expand-lg navbar-light modern-navbar shadow-sm"
-  style="position:fixed; width:100%; z-index:999;">
-  <div class="container">
+<nav class="bg-white shadow-md fixed w-full z-50">
+  <div class="container mx-auto flex items-center justify-between px-4 py-3">
     <!-- Brand -->
-    <a class="navbar-brand fw-bold" href="#">
-      <i class="bi bi-heart-pulse-fill me-2"></i>CareMate
+    <a href="{% url 'home:doctor' %}" 
+       class="text-2xl font-bold bg-gradient-to-r from-indigo-500 to-purple-600 bg-clip-text text-transparent flex items-center">
+      <i class="bi bi-heart-pulse-fill me-2 text-red-500"></i>CareMate
     </a>
 
     <!-- Mobile toggle -->
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-      aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
+    <button id="menu-toggle" class="lg:hidden text-gray-600 focus:outline-none">
+      <i class="bi bi-list text-2xl"></i>
     </button>
 
     <!-- Links -->
-    <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav ms-auto align-items-lg-center">
-        <li class="nav-item">
-          <form method="GET" action="{% url 'home:search' %}" class="search-box">
-            <input type="text" name="q" placeholder="Search...">
-            <!-- Search icon -->
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M21 21l-4.35-4.35M17 11a6 6 0 11-12 0 6 6 0 0112 0z" />
-            </svg>
-          </form>
-        </li>
+    <div id="menu" class="hidden lg:flex items-center gap-6">
+      <!-- Search -->
+      <form method="GET" action="{% url 'home:search' %}" class="relative">
+        <input type="text" name="q" placeholder="Search..."
+          class="rounded-full px-4 py-2 border border-indigo-300 focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+      </form>
 
-        <li class="nav-item">
-          <a class="nav-link active fw-semibold" href="{% url 'home:doctor' %}">Home</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link active fw-semibold" href="{% url 'profile:view_appointments' %}">appointments</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link active fw-semibold" href="{% url 'profile:profile_patient' %}">profile</a>
-        </li>
+      <a href="{% url 'home:doctor' %}" class="font-medium text-gray-700 hover:text-indigo-600">Home</a>
+      <a href="{% url 'profile:view_appointments' %}" class="font-medium text-gray-700 hover:text-indigo-600">Appointments</a>
+      <a href="{% url 'profile:profile_patient' %}" class="font-medium text-gray-700 hover:text-indigo-600">Profile</a>
 
-        {% if user.is_authenticated %}
-        <!-- Show Logout when logged in -->
-        <li class="nav-item">
-          <form method="post" action="{% url 'user_account:logout' %}">
-            {% csrf_token %}
-            <button type="submit" class="btn btn-outline-danger ms-lg-3 px-3 rounded-pill">
-              Logout
-            </button>
-          </form>
-        </li>
-        {% endif %}
-        
-      </ul>
+      {% if user.is_authenticated %}
+      <form method="post" action="{% url 'user_account:logout' %}">
+        {% csrf_token %}
+        <button type="submit"
+          class="bg-red-500 text-white rounded-full px-4 py-2 hover:bg-red-600 transition">
+          Logout
+        </button>
+      </form>
+      {% else %}
+      <a href="{% url 'user_account:login' %}" 
+         class="bg-indigo-500 text-white rounded-full px-4 py-2 hover:bg-indigo-600 transition">
+        Login
+      </a>
+      <a href="{% url 'user_account:sign-up' %}" 
+         class="border border-indigo-500 text-indigo-500 rounded-full px-4 py-2 hover:bg-indigo-50 transition">
+        Sign up
+      </a>
+      {% endif %}
     </div>
   </div>
+
+  <!-- Mobile Menu -->
+  <div id="mobile-menu" class="hidden flex-col gap-4 px-4 py-3 bg-white shadow-md lg:hidden">
+    <form method="GET" action="{% url 'home:search' %}">
+      <input type="text" name="q" placeholder="Search..."
+        class="w-full rounded-full px-4 py-2 border border-indigo-300 focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+    </form>
+    {% if request.user.role == 'patient' %}
+    <a href="{% url 'home:doctor' %}" class="font-medium text-gray-700 hover:text-indigo-600">Home</a>
+    <a href="{% url 'profile:view_appointments' %}" class="font-medium text-gray-700 hover:text-indigo-600">Appointments</a>
+    <a href="{% url 'profile:profile_patient' %}" class="font-medium text-gray-700 hover:text-indigo-600">Profile</a>
+    {% endif %}
+    {% if user.is_authenticated %}
+    <form method="post" action="{% url 'user_account:logout' %}">
+      {% csrf_token %}
+      <button type="submit"
+        class="bg-red-500 text-white rounded-full px-4 py-2 hover:bg-red-600 transition w-full">
+        Logout
+      </button>
+    </form>
+    {% else %}
+    <a href="{% url 'user_account:login' %}" 
+       class="bg-indigo-500 text-white rounded-full px-4 py-2 hover:bg-indigo-600 transition text-center">
+      Login
+    </a>
+    <a href="{% url 'user_account:sign-up' %}" 
+       class="border border-indigo-500 text-indigo-500 rounded-full px-4 py-2 hover:bg-indigo-50 transition text-center">
+      Sign up
+    </a>
+    {% endif %}
+  </div>
 </nav>
+
+<script>
+  const toggle = document.getElementById("menu-toggle");
+  const menu = document.getElementById("menu");
+  const mobileMenu = document.getElementById("mobile-menu");
+
+  toggle.addEventListener("click", () => {
+    mobileMenu.classList.toggle("hidden");
+  });
+</script>

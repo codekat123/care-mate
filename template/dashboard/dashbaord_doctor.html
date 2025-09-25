@@ -165,7 +165,7 @@
                                     {% endif %}
 
                                     <!-- View Profile button -->
-                                    <a href="{% url 'dashboard:appointment-detail' appointment.id %}"
+                                    <a href="{% url 'dashboard:appointment-detail' appointment.patient.id %}"
                                         class="btn btn-primary w-100 flex-fill">
                                         <i class="bi bi-person-lines-fill me-1"></i> View Profile
                                     </a>

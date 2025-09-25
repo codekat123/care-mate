@@ -76,7 +76,7 @@ class PatientProfileDashboard(DetailView):
           id = self.kwargs['pk']
           patient = PatientProfile.objects.get(id=id)
           context['patient'] = patient
-          context['age'] = self.calculate_age(patient.date_of_birthday)
+          # context['age'] = self.calculate_age(patient.date_of_birthday)
           return context
 
 @method_decorator(login_required(login_url='user_account:login'),name='dispatch')

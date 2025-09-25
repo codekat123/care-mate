@@ -1,16 +1,15 @@
 from pathlib import Path
 import os
-
+from dotenv import load_dotenv 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
+load_dotenv(BASE_DIR / ".env")
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-p+!1g2vfs#_7!*ruivfdk%x%*ur$$ya#$%vz_hzoq@huy+6+7('
-
+SECRET_KEY = os.getenv('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
@@ -28,17 +27,7 @@ INSTALLED_APPS = [
     'daphne',
     'django.contrib.staticfiles',
     'channels',
-      # needed for allauth
     'django.contrib.sites',
-
-    # allauth apps
-    'allauth',
-    'allauth.account',
-    'allauth.socialaccount',
-
-    # providers (Google + GitHub)
-    'allauth.socialaccount.providers.google',
-    'allauth.socialaccount.providers.github',
     'widget_tweaks',
     'user_account',
     'profile_users',
@@ -57,7 +46,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'allauth.account.middleware.AccountMiddleware',
 ]
 
 ROOT_URLCONF = 'src.urls'
@@ -139,10 +127,9 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'user_account.User'
 
 AUTHENTICATION_BACKENDS = [
-    'django.contrib.auth.backends.ModelBackend',  # default
-    'allauth.account.auth_backends.AuthenticationBackend',  # allauth
+    'django.contrib.auth.backends.ModelBackend',
 ]
-GEMINI_API_KEY = 'AIzaSyCc2uXPIPTMl3WGVx8bMyo5RTmw6AkBLdE'
+GEMINI_API_KEY = os.getenv('GEMINI_API_KEY')
 
 # Channels / Redis (websocket layer)
 REDIS_URL = os.getenv('REDIS_URL', 'redis://127.0.0.1:6379/1')
@@ -159,6 +146,10 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'ahmedjader42@gmail.com'
-EMAIL_HOST_PASSWORD = 'fcfp fsug mmmm zbui'
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+
+CELERY_BROKER_URL = os.getenv("REDIS_URL", "redis://127.0.0.1:6379/1")
+CELERY_RESULT_BACKEND = os.getenv("REDIS_URL", "redis://127.0.0.1:6379/1")
