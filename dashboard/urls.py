@@ -9,5 +9,6 @@ urlpatterns = [
           path('delete-reservation/<int:pk>/',DeleteReservation.as_view(),name='delete'),
           path('patient-profile/<int:pk>/',PatientProfileDashboard.as_view(),name='appointment-detail'),
           path('schedule-appointment/<int:pk>/',ScheduleAppointment.as_view(),name='schedule'),
+          path("report/", generate_report_patient, name="generate_report"),
           
 ]

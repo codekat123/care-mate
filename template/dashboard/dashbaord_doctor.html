@@ -6,7 +6,7 @@
 <div class="row">
     <div class="col-12">
         <!-- Dashboard Header -->
-         {% include 'partial/alert.html' %}
+        {% include 'partial/alert.html' %}
         <div class="card shadow-sm border-0 mb-4">
             <div class="card-body py-3">
                 <div class="d-flex align-items-center justify-content-between">
@@ -34,7 +34,8 @@
                                 <h6 class="dropdown-header">Notifications</h6>
                             </li>
                             {% for n in notifications %}
-                            <li><a class="dropdown-item" href="{% url 'chat:room' n.conversation.id %}">{{n.content}}</a></li>
+                            <li><a class="dropdown-item"
+                                    href="{% url 'chat:room' n.conversation.id %}">{{n.content}}</a></li>
                             {% endfor %}
                         </ul>
                         <a href="{% url 'dashboard:update' %}"> <button class="btn btn-outline-secondary btn-sm">
@@ -86,47 +87,34 @@
             <div class="tab-pane fade show active" id="appointments" role="tabpanel">
 
                 <!-- Search and Filter -->
-                <form method="GET" action="#" class="mb-4">
-                    <div class="card shadow-sm border-0">
-                        <div class="card-body">
-                            <div class="row g-3">
-                                <div class="col-md-8">
-                                    <div class="input-group">
-                                        <span class="input-group-text bg-light border-end-0">
-                                            <i class="bi bi-search text-muted"></i>
-                                        </span>
-                                        <input type="text" class="form-control border-start-0" name="search"
-                                            placeholder="Search patients, symptoms..." value="{{ request.GET.search }}">
-                                    </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <select class="form-select" name="status">
-                                        <option value="all" {% if request.GET.status == 'all' %}selected{% endif %}>All
-                                            Status</option>
-                                        <option value="pending"
-                                            {% if request.GET.status == 'pending' %}selected{% endif %}>Pending</option>
-                                        <option value="confirmed"
-                                            {% if request.GET.status == 'confirmed' %}selected{% endif %}>Confirmed
-                                        </option>
-                                        <option value="urgent"
-                                            {% if request.GET.status == 'urgent' %}selected{% endif %}>Urgent</option>
-                                        <option value="completed"
-                                            {% if request.GET.status == 'completed' %}selected{% endif %}>Completed
-                                        </option>
-                                        <option value="cancelled"
-                                            {% if request.GET.status == 'cancelled' %}selected{% endif %}>Cancelled
-                                        </option>
-                                    </select>
-                                </div>
-                                <div class="col-md-1">
-                                    <button type="submit" class="btn btn-primary w-100">
-                                        <i class="bi bi-funnel"></i>
-                                    </button>
-                                </div>
+                <div class="card shadow-sm border-0 mb-4">
+                    <div class="card-body">
+                        <h5 class="fw-bold mb-3">Generate Patient Report</h5>
+                        <form method="POST" action="{% url 'dashboard:generate_report' %}" class="row g-3 align-items-end">
+                            {% csrf_token %}
+
+                            <!-- Start Date -->
+                            <div class="col-md-5">
+                                <label for="id_start_date" class="form-label">Start Date</label>
+                                <input type="date" name="start_date" id="id_start_date" class="form-control" required>
                             </div>
-                        </div>
+
+                            <!-- End Date -->
+                            <div class="col-md-5">
+                                <label for="id_end_date" class="form-label">End Date</label>
+                                <input type="date" name="end_date" id="id_end_date" class="form-control" required>
+                            </div>
+
+                            <!-- Submit -->
+                            <div class="col-md-2">
+                                <button type="submit" class="btn btn-primary w-100">
+                                    <i class="bi bi-download me-1"></i> Export CSV
+                                </button>
+                            </div>
+                        </form>
                     </div>
-                </form>
+                </div>
+
 
                 <!-- Appointments Section -->
                 <div class="card shadow-sm border-0 mb-4">

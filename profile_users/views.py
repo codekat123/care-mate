@@ -1,8 +1,8 @@
-from django.shortcuts import render , redirect
+from django.shortcuts import render , redirect , get_object_or_404
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
 from django.views.generic.edit import UpdateView
-from .models import DoctorProfile , PatientProfile
+from .models import DoctorProfile , PatientProfile , DoctorRating
 from user_account.models import User
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.utils.decorators import method_decorator
@@ -11,6 +11,7 @@ from .forms import *
 from django.urls import reverse_lazy
 from datetime import date
 from home.models import Reservation
+from django.contrib import messages
 
 @method_decorator(login_required(login_url='user_account:login'),name='dispatch')
 class ProfilePatient(DetailView):
@@ -81,3 +82,21 @@ class ShowAppointment(ListView):
 
     def get_queryset(self):
         return Reservation.objects.filter(patient=self.request.user.patient)
+    
+
+def rate_doctor(request,doctor_id):
+    doctor = get_object_or_404(DoctorProfile,id=doctor_id)
+    patient = request.user
+
+    if request.method == 'POST':
+        rating = int(request.POST.get('rating'))
+        comment = request.POST.get('comment')
+        
+
+        DoctorRating.objects.update_or_create(
+            doctor=doctor,
+            patient=patient,
+            defaults={"rating": rating, "comment": comment}
+        )
+        messages.success(request, "Your rating has been submitted!")
+        return redirect("home:detials", doctor_id=doctor.id)

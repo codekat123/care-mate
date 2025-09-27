@@ -11,8 +11,11 @@ from django.views.generic.edit import UpdateView
 from django.views.decorators.http import require_POST
 from datetime import date
 from chat.models import Message
-
-
+from .forms import PatientReport
+from django.db.models import Q
+from django.http import HttpResponse
+import csv
+import datetime
 
 
 @method_decorator(login_required(login_url='user_account:login'),name='dispatch')
@@ -32,6 +35,7 @@ class DoctorDashBoard(DetailView):
          context['doctor_Profile'] = self.object
          context['count_of_notifications'] = Message.objects.filter(sender=self.request.user).count()
          context['notifications'] = Message.objects.filter(sender=self.request.user).order_by('-created_at')[:7]
+         context['patient_report'] = PatientReport()
          return context
 
 
@@ -85,3 +89,50 @@ class ScheduleAppointment(UpdateView):
      fields = ['appointment']
      template_name = 'dashboard/dashboard_doctor.html'
      success_url = reverse_lazy("dashboard:dashboard")
+
+
+
+@login_required(login_url="user_account:login")
+@require_POST
+def generate_report_patient(request):
+    form = PatientReport(request.POST)
+    if not form.is_valid():
+        return HttpResponse("Invalid input", status=400)
+
+    start_date = form.cleaned_data["start_date"]
+    end_date = form.cleaned_data["end_date"]
+
+    reservations = Reservation.objects.filter(
+        created_at__range=(start_date, end_date)
+    )
+
+    # CSV setup
+    opts = Reservation._meta
+    response = HttpResponse(content_type="text/csv")
+    response["Content-Disposition"] = (
+        f'attachment; filename="{opts.verbose_name_plural}.csv"'
+    )
+
+    writer = csv.writer(response)
+    headers = [
+        "Patient Name",
+        "Doctor Name",
+        "Approved",
+        "Appointment Date",
+        "Created At",
+    ]
+    writer.writerow(headers)
+
+    for r in reservations.select_related("patient__user", "doctor__user"):
+        writer.writerow(
+            [
+                r.patient.user.first_name,
+                r.doctor.user.first_name,
+                "Yes" if r.is_approved else "No",
+                r.appointment,
+                r.created_at,
+            ]
+        )
+
+    return response
+

@@ -27,7 +27,7 @@ def analyze_symptoms_task(self, user_message, conversation_history=None):
     try:
         # Configure Gemini in the worker process
         genai.configure(api_key=settings.GEMINI_API_KEY)
-        model = genai.GenerativeModel("models/gemini-1.5-flash")
+        model = genai.GenerativeModel("gemini-2.5-flash")
 
         messages = [{"role": "model", "parts": [SYSTEM_PROMPT]}]
 

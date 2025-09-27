@@ -19,10 +19,11 @@
           class="rounded-full px-4 py-2 border border-indigo-300 focus:ring-2 focus:ring-indigo-500 focus:outline-none">
       </form>
 
+      {% if request.user.role == 'patient' %}
       <a href="{% url 'home:doctor' %}" class="font-medium text-gray-700 hover:text-indigo-600">Home</a>
       <a href="{% url 'profile:view_appointments' %}" class="font-medium text-gray-700 hover:text-indigo-600">Appointments</a>
       <a href="{% url 'profile:profile_patient' %}" class="font-medium text-gray-700 hover:text-indigo-600">Profile</a>
-
+      {% endif %}
       {% if user.is_authenticated %}
       <form method="post" action="{% url 'user_account:logout' %}">
         {% csrf_token %}

@@ -9,6 +9,7 @@ class Reservation(models.Model):
      appointment = models.DateTimeField(null=True,blank=True)
      name = models.CharField(max_length=100,)
      phone_number = models.CharField(max_length=60)
+     created_at = models.DateField(auto_now_add=True,editable=False)
 
      def __str__(self):
           return self.name
