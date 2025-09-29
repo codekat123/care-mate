@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import get_user_model
 from django.db.models import Q
 from .models import Conversation, Message
+from django.utils.decorators import method_decorator
 from django.views.generic.list import ListView
 User = get_user_model()
 
@@ -52,13 +53,15 @@ def room(request, conversation_id):
         'messages': messages,
     })
 
-
+@method_decorator(login_required(login_url='user_account:login'),name='dispatch')
 class ConversationListDoctor(ListView):
     model = Conversation
     template_name = 'chat/doctor_conversation.html'
     context_object_name = "conversations"
 
+
     def get_queryset(self):
         if self.request.user.role == "doctor":
             return Conversation.objects.filter(doctor=self.request.user).select_related('doctor', 'patient').order_by('-created_at')
         return Conversation.objects.filter(patient=self.request.user).select_related('doctor', 'patient').order_by('-created_at')
+

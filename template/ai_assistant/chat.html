@@ -4,17 +4,34 @@
 
 <div style="max-width: 800px; margin: 0 auto; padding: 20px; margin-top: 80px;">
     <!-- Header -->
-    <div style="background: white; border-radius: 15px; padding: 30px; margin-bottom: 20px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); text-align: center;">
+    <div
+        style="background: white; border-radius: 15px; padding: 30px; margin-bottom: 20px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); text-align: center;">
         <h1 style="color: #2c5282; font-size: 2em; margin-bottom: 10px;">🤖 AI Medical Assistant</h1>
-        <p style="color: #666;">Describe your symptoms and I'll help you decide whether to book an appointment</p>
+        <p style="color: #666;">Describe your symptoms and I'll help you decide whether to book an appointment</p>      
     </div>
-
+    <div style="text-align: center; margin-bottom: 20px;">
+        <a href="{% url 'ai_assistant:delete' conversation.id %}"
+           style="background: #ef4444; 
+                  color: white; 
+                  padding: 12px 25px; 
+                  border-radius: 25px; 
+                  text-decoration: none; 
+                  font-weight: 600;
+                  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+                  transition: background 0.2s ease, transform 0.1s ease;"
+           onmouseover="this.style.background='#dc2626'; this.style.transform='scale(1.05)'"
+           onmouseout="this.style.background='#ef4444'; this.style.transform='scale(1)'">
+            🗑 Clean Conversation
+        </a>
+    </div>
     <!-- Chat Container -->
-    <div style="background: white; border-radius: 15px; padding: 20px; margin-bottom: 20px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); height: 500px; overflow-y: auto;" id="chatContainer">
+    <div style="background: white; border-radius: 15px; padding: 20px; margin-bottom: 20px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); height: 500px; overflow-y: auto;"
+        id="chatContainer">
         <div id="messages">
             {% for message in messages %}
             <div style="margin-bottom: 15px; {% if message.message_type == 'user' %}text-align: right;{% endif %}">
-                <div style="display: inline-block; max-width: 70%; padding: 12px 16px; border-radius: 18px;
+                <div
+                    style="display: inline-block; max-width: 70%; padding: 12px 16px; border-radius: 18px;
                            {% if message.message_type == 'user' %}background: #007bff; color: white;{% else %}background: #f1f3f4; color: #333;{% endif %}">
                     {{ message.content }}
                 </div>
@@ -36,8 +53,9 @@
         <form id="messageForm">
             <div style="display: flex; gap: 10px;">
                 <input type="text" id="messageInput" placeholder="Describe your symptoms..."
-                       style="flex: 1; padding: 12px 16px; border: 2px solid #e2e8f0; border-radius: 25px; font-size: 14px; outline: none;">
-                <button type="submit" style="background: #22c55e; color: white; border: none; padding: 12px 20px; border-radius: 25px; cursor: pointer; font-weight: 600;">
+                    style="flex: 1; padding: 12px 16px; border: 2px solid #e2e8f0; border-radius: 25px; font-size: 14px; outline: none;">
+                <button type="submit"
+                    style="background: #22c55e; color: white; border: none; padding: 12px 20px; border-radius: 25px; cursor: pointer; font-weight: 600;">
                     Send
                 </button>
             </div>
@@ -46,107 +64,108 @@
 
     <!-- Quick Action Buttons -->
     <div style="text-align: center; margin-top: 20px;">
-        <a href="{% url 'home:doctor' %}" style="background: #3b82f6; color: white; padding: 12px 25px; border-radius: 25px; text-decoration: none; margin: 0 10px; display: inline-block;">
+        <a href="{% url 'home:doctor' %}"
+            style="background: #3b82f6; color: white; padding: 12px 25px; border-radius: 25px; text-decoration: none; margin: 0 10px; display: inline-block;">
             📋 Book Appointment
         </a>
     </div>
 </div>
 
 <script>
-document.getElementById('messageForm').addEventListener('submit', function(e) {
-    e.preventDefault();
+    document.getElementById('messageForm').addEventListener('submit', function (e) {
+        e.preventDefault();
 
-    const messageInput = document.getElementById('messageInput');
-    const message = messageInput.value.trim();
+        const messageInput = document.getElementById('messageInput');
+        const message = messageInput.value.trim();
 
-    if (!message) return;
+        if (!message) return;
 
-    // Add user message to chat immediately
-    addMessageToChat(message, 'user');
-    messageInput.value = '';
+        // Add user message to chat immediately
+        addMessageToChat(message, 'user');
+        messageInput.value = '';
 
-    // Show typing indicator
-    showTypingIndicator();
+        // Show typing indicator
+        showTypingIndicator();
 
-    // Send to server
-    fetch('/ai/chat/send/', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
-        },
-        body: JSON.stringify({message: message})
-    })
-    .then(response => response.json())
-    .then(data => {
-        hideTypingIndicator();
-        if (data.ai_response) {
-            addMessageToChat(data.ai_response, 'ai');
-        } else {
-            addMessageToChat('Sorry, something went wrong. Please try again.', 'ai');
-        }
-    })
-    .catch(error => {
-        hideTypingIndicator();
-        addMessageToChat('Sorry, something went wrong. Please try again.', 'ai');
+        // Send to server
+        fetch('/ai/chat/send/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+            },
+            body: JSON.stringify({ message: message })
+        })
+            .then(response => response.json())
+            .then(data => {
+                hideTypingIndicator();
+                if (data.ai_response) {
+                    addMessageToChat(data.ai_response, 'ai');
+                } else {
+                    addMessageToChat('Sorry, something went wrong. Please try again.', 'ai');
+                }
+            })
+            .catch(error => {
+                hideTypingIndicator();
+                addMessageToChat('Sorry, something went wrong. Please try again.', 'ai');
+            });
     });
-});
 
-function addMessageToChat(message, type) {
-    const messagesContainer = document.getElementById('messages');
-    const messageDiv = document.createElement('div');
-    messageDiv.style.marginBottom = '15px';
-    messageDiv.style.textAlign = type === 'user' ? 'right' : 'left';
+    function addMessageToChat(message, type) {
+        const messagesContainer = document.getElementById('messages');
+        const messageDiv = document.createElement('div');
+        messageDiv.style.marginBottom = '15px';
+        messageDiv.style.textAlign = type === 'user' ? 'right' : 'left';
 
-    const messageContent = document.createElement('div');
-    messageContent.style.display = 'inline-block';
-    messageContent.style.maxWidth = '70%';
-    messageContent.style.padding = '12px 16px';
-    messageContent.style.borderRadius = '18px';
-    messageContent.style.background = type === 'user' ? '#007bff' : '#f1f3f4';
-    messageContent.style.color = type === 'user' ? 'white' : '#333';
-    messageContent.textContent = message;
+        const messageContent = document.createElement('div');
+        messageContent.style.display = 'inline-block';
+        messageContent.style.maxWidth = '70%';
+        messageContent.style.padding = '12px 16px';
+        messageContent.style.borderRadius = '18px';
+        messageContent.style.background = type === 'user' ? '#007bff' : '#f1f3f4';
+        messageContent.style.color = type === 'user' ? 'white' : '#333';
+        messageContent.textContent = message;
 
-    const timestamp = document.createElement('div');
-    timestamp.style.fontSize = '0.8em';
-    timestamp.style.color = '#666';
-    timestamp.style.marginTop = '5px';
-    timestamp.textContent = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+        const timestamp = document.createElement('div');
+        timestamp.style.fontSize = '0.8em';
+        timestamp.style.color = '#666';
+        timestamp.style.marginTop = '5px';
+        timestamp.textContent = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
-    messageDiv.appendChild(messageContent);
-    messageDiv.appendChild(timestamp);
-    messagesContainer.appendChild(messageDiv);
+        messageDiv.appendChild(messageContent);
+        messageDiv.appendChild(timestamp);
+        messagesContainer.appendChild(messageDiv);
 
-    // Scroll to bottom
-    document.getElementById('chatContainer').scrollTop = document.getElementById('chatContainer').scrollHeight;
-}
-
-function showTypingIndicator() {
-    const messagesContainer = document.getElementById('messages');
-    const typingDiv = document.createElement('div');
-    typingDiv.id = 'typingIndicator';
-    typingDiv.style.textAlign = 'left';
-    typingDiv.style.marginBottom = '15px';
-
-    const typingContent = document.createElement('div');
-    typingContent.style.display = 'inline-block';
-    typingContent.style.padding = '12px 16px';
-    typingContent.style.borderRadius = '18px';
-    typingContent.style.background = '#f1f3f4';
-    typingContent.style.color = '#666';
-    typingContent.innerHTML = 'AI is typing...';
-
-    typingDiv.appendChild(typingContent);
-    messagesContainer.appendChild(typingDiv);
-    document.getElementById('chatContainer').scrollTop = document.getElementById('chatContainer').scrollHeight;
-}
-
-function hideTypingIndicator() {
-    const typingIndicator = document.getElementById('typingIndicator');
-    if (typingIndicator) {
-        typingIndicator.remove();
+        // Scroll to bottom
+        document.getElementById('chatContainer').scrollTop = document.getElementById('chatContainer').scrollHeight;
     }
-}
+
+    function showTypingIndicator() {
+        const messagesContainer = document.getElementById('messages');
+        const typingDiv = document.createElement('div');
+        typingDiv.id = 'typingIndicator';
+        typingDiv.style.textAlign = 'left';
+        typingDiv.style.marginBottom = '15px';
+
+        const typingContent = document.createElement('div');
+        typingContent.style.display = 'inline-block';
+        typingContent.style.padding = '12px 16px';
+        typingContent.style.borderRadius = '18px';
+        typingContent.style.background = '#f1f3f4';
+        typingContent.style.color = '#666';
+        typingContent.innerHTML = 'AI is typing...';
+
+        typingDiv.appendChild(typingContent);
+        messagesContainer.appendChild(typingDiv);
+        document.getElementById('chatContainer').scrollTop = document.getElementById('chatContainer').scrollHeight;
+    }
+
+    function hideTypingIndicator() {
+        const typingIndicator = document.getElementById('typingIndicator');
+        if (typingIndicator) {
+            typingIndicator.remove();
+        }
+    }
 </script>
 
 {% endblock %}

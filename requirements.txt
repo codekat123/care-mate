@@ -20,6 +20,8 @@ cryptography==46.0.1
 daphne==4.2.1
 Django==5.2.6
 django-widget-tweaks==1.5.0
+djangorestframework==3.16.1
+djangorestframework_simplejwt==5.5.1
 google-ai-generativelanguage==0.4.0
 google-api-core==2.25.1
 google-auth==2.40.3

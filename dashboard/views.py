@@ -16,7 +16,7 @@ from django.db.models import Q
 from django.http import HttpResponse
 import csv
 import datetime
-
+from django.core.paginator import Paginator
 
 @method_decorator(login_required(login_url='user_account:login'),name='dispatch')
 class DoctorDashBoard(DetailView):
@@ -29,8 +29,15 @@ class DoctorDashBoard(DetailView):
      
      
      def get_context_data(self, **kwargs):
+         
+
+         appointments = Reservation.objects.filter(doctor=self.request.user.doctor)
+         paginator = Paginator(appointments, 10)  
+         page_number = self.request.GET.get("page")
+         page_obj = paginator.get_page(page_number)
+
          context = super().get_context_data(**kwargs)
-         context['appointments'] = Reservation.objects.filter(doctor=self.request.user.doctor)
+         context['appointments'] = page_obj
          context['count_of_reservation'] = Reservation.objects.filter(doctor=self.request.user.doctor).count()
          context['doctor_Profile'] = self.object
          context['count_of_notifications'] = Message.objects.filter(sender=self.request.user).count()
@@ -80,7 +87,7 @@ class PatientProfileDashboard(DetailView):
           id = self.kwargs['pk']
           patient = PatientProfile.objects.get(id=id)
           context['patient'] = patient
-          # context['age'] = self.calculate_age(patient.date_of_birthday)
+          context['age'] = self.calculate_age(patient.date_of_birthday)
           return context
 
 @method_decorator(login_required(login_url='user_account:login'),name='dispatch')

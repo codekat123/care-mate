@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render , get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -6,9 +6,12 @@ from django.views.decorators.http import require_POST
 from django.utils.decorators import method_decorator
 from django.views import View
 import json
-
+from django.views.generic import DeleteView
 from .models import AIConversation, AIMessage
 from .tasks import analyze_symptoms_task
+from django.core.exceptions import PermissionDenied
+from django.urls import reverse_lazy
+
 
 
 @method_decorator(login_required, name="dispatch")
@@ -81,8 +84,25 @@ def send_message(request):
                 "user_message": user_message,
                 "ai_response": ai_response,
                 "timestamp": ai_msg.timestamp.isoformat(),
+                "conversation":conversation.id
             }
         )
 
     except Exception as e:
+        print(e)
         return JsonResponse({"error": str(e)}, status=500)
+
+
+
+class DeleteAIConversation(DeleteView):
+    model = AIConversation
+    template_name = 'ai_assistant/confirmation_deletion.html'
+    success_url = reverse_lazy('ai_assistant:chat')
+
+    def get_object(self, queryset=None):
+        conversation = get_object_or_404(AIConversation, pk=self.kwargs['pk'])
+        if conversation.user != self.request.user:
+            raise PermissionDenied
+        return conversation
+
+    

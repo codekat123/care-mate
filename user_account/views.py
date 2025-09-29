@@ -73,10 +73,10 @@ class CustomLoginView(LoginView):
             messages.error(self.request, "Your account is not active. Please verify your email.")
             return redirect("user_account:login")
 
-        if user.role == "doctor" and not user.doctor.is_completed:
+        if user.role == "doctor" and user.doctor.is_completed:
             messages.info(self.request, "Please complete your profile before continuing.")
         
-        if user.role == "patient" and not user.patient.is_completed:
+        if user.role == "patient" and user.patient.is_completed:
             messages.info(self.request, "Please complete your profile before continuing.")
 
 

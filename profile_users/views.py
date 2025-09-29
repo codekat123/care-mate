@@ -67,7 +67,7 @@ class BaseProfileUpdateView(UpdateView):
         else:
             return self.render_to_response(context)
 
-
+@method_decorator(login_required(login_url='user_account:login'),name='dispatch')
 class PatientProfileUpdateView(BaseProfileUpdateView):
     user_form_class = UserForm
     form_class = PatientProfileForm
@@ -75,15 +75,16 @@ class PatientProfileUpdateView(BaseProfileUpdateView):
     model_field = 'patient'
     success_url = reverse_lazy('profile:profile_patient')
 
-
+@method_decorator(login_required(login_url='user_account:login'),name='dispatch')
 class ShowAppointment(ListView):
     model = Reservation
     template_name = 'home/reservation_list.html'
+    paginate_by = 10
 
     def get_queryset(self):
         return Reservation.objects.filter(patient=self.request.user.patient)
     
-
+login_required(login_url='user_account:login')
 def rate_doctor(request,doctor_id):
     doctor = get_object_or_404(DoctorProfile,id=doctor_id)
     patient = request.user

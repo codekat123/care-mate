@@ -7,70 +7,136 @@
   </h3>
 
   {% if user_list %}
-    <div class="row g-4">
-      {% for doctor in user_list %}
-        {% if doctor.role == "doctor" and doctor.doctor %}
-        <div class="col-md-4">
-          <div class="card shadow-sm border-0 rounded-3 h-100 hover-card">
-            <!-- Profile Image -->
-            <img src="{{ doctor.doctor.profile_image.url }}" class="card-img-top rounded-top" alt="Doctor Image" style="height:220px; object-fit:cover;">
-            
-            <div class="card-body">
-              <!-- Name -->
-              <h5 class="card-title fw-bold mb-1">Dr. {{ doctor.get_full_name }}</h5>
-              <p class="text-muted mb-2">{{ doctor.doctor.major }}</p>
-              
-              <!-- Bio -->
-              {% if doctor.doctor.bio %}
-                <p class="small text-secondary">{{ doctor.doctor.bio|truncatechars:100 }}</p>
-              {% endif %}
+  <div class="row g-4">
+    {% for doctor in user_list %}
+    {% if doctor.role == "doctor" and doctor.doctor %}
+    <div class="col-md-4">
+      <div class="card shadow-sm border-0 rounded-3 h-100 hover-card">
+        <!-- Profile Image -->
+        <img src="{{ doctor.doctor.profile_image.url }}" class="card-img-top rounded-top" alt="Doctor Image"
+          style="height:220px; object-fit:cover;">
 
-              <!-- Consultation Fee -->
-              {% if doctor.doctor.consultation_fee %}
-              <p class="mb-2">
-                <i class="bi bi-cash-coin text-success me-1"></i> 
-                {{ doctor.doctor.consultation_fee }} EGP
-              </p>
-              {% endif %}
+        <div class="card-body">
+          <!-- Name -->
+          <h5 class="card-title fw-bold mb-1">Dr. {{ doctor.get_full_name }}</h5>
+          <p class="text-muted mb-2">{{ doctor.doctor.major }}</p>
 
-              <!-- Location -->
-              {% if doctor.doctor.location_medical_office %}
-              <p class="mb-2">
-                <i class="bi bi-geo-alt text-danger me-1"></i> 
-                {{ doctor.doctor.location_medical_office|truncatechars:40 }}
-              </p>
-              {% endif %}
+          <!-- Bio -->
+          {% if doctor.doctor.bio %}
+          <p class="small text-secondary">{{ doctor.doctor.bio|truncatechars:100 }}</p>
+          {% endif %}
 
-              <!-- Phone -->
-              {% if doctor.doctor.phone_number %}
-              <p class="mb-3">
-                <i class="bi bi-telephone text-primary me-1"></i> 
-                {{ doctor.doctor.phone_number }}
-              </p>
-              {% endif %}
+          <!-- Consultation Fee -->
+          {% if doctor.doctor.consultation_fee %}
+          <p class="mb-2">
+            <i class="bi bi-cash-coin text-success me-1"></i>
+            {{ doctor.doctor.consultation_fee }} EGP
+          </p>
+          {% endif %}
 
-              <!-- Button -->
-              <a href="{% url 'home:detials' doctor.doctor.id%}" class="btn btn-primary w-100 rounded-pill">
-                View Profile
-              </a>
-            </div>
-          </div>
+          <!-- Location -->
+          {% if doctor.doctor.location_medical_office %}
+          <p class="mb-2">
+            <i class="bi bi-geo-alt text-danger me-1"></i>
+            {{ doctor.doctor.location_medical_office|truncatechars:40 }}
+          </p>
+          {% endif %}
+
+          <!-- Phone -->
+          {% if doctor.doctor.phone_number %}
+          <p class="mb-3">
+            <i class="bi bi-telephone text-primary me-1"></i>
+            {{ doctor.doctor.phone_number }}
+          </p>
+          {% endif %}
+
+          <!-- Button -->
+          <a href="{% url 'home:detials' doctor.doctor.id%}" class="btn btn-primary w-100 rounded-pill">
+            View Profile
+          </a>
         </div>
-        {% endif %}
-      {% endfor %}
+      </div>
     </div>
+    {% endif %}
+    {% endfor %}
+  </div>
+
+<!-- Pagination -->
+<nav aria-label="Search results pages" class="mt-4">
+  <ul class="pagination justify-content-center">
+    <!-- First & Previous -->
+    {% if page_obj.has_previous %}
+      <li class="page-item">
+        <a class="page-link" href="?page=1">&laquo; First</a>
+      </li>
+      <li class="page-item">
+        <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+      </li>
+    {% else %}
+      <li class="page-item disabled">
+        <span class="page-link">&laquo; First</span>
+      </li>
+      <li class="page-item disabled">
+        <span class="page-link">Previous</span>
+      </li>
+    {% endif %}
+
+    <!-- Page numbers -->
+    {% for num in page_obj.paginator.page_range %}
+      {% if page_obj.number == num %}
+        <li class="page-item active">
+          <span class="page-link">{{ num }}</span>
+        </li>
+      {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+        <li class="page-item">
+          <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+        </li>
+      {% endif %}
+    {% endfor %}
+
+    <!-- Next & Last -->
+    {% if page_obj.has_next %}
+      <li class="page-item">
+        <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+      </li>
+      <li class="page-item">
+        <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Last &raquo;</a>
+      </li>
+    {% else %}
+      <li class="page-item disabled">
+        <span class="page-link">Next</span>
+      </li>
+      <li class="page-item disabled">
+        <span class="page-link">Last &raquo;</span>
+      </li>
+    {% endif %}
+  </ul>
+</nav>
+
   {% else %}
-    <div class="alert alert-warning rounded-3 shadow-sm">
-      <i class="bi bi-exclamation-circle me-2"></i>
-      No results found.
-    </div>
+  <div class="alert alert-warning rounded-3 shadow-sm">
+    <i class="bi bi-exclamation-circle me-2"></i>
+    No results found.
+  </div>
   {% endif %}
 </div>
 
 <style>
-  .text-indigo-600 { color: #667eea !important; }
-  .text-purple-600 { color: #764ba2 !important; }
-  .hover-card { transition: all 0.3s ease; }
-  .hover-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(102, 126, 234, 0.2); }
+  .text-indigo-600 {
+    color: #667eea !important;
+  }
+
+  .text-purple-600 {
+    color: #764ba2 !important;
+  }
+
+  .hover-card {
+    transition: all 0.3s ease;
+  }
+
+  .hover-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(102, 126, 234, 0.2);
+  }
 </style>
 {% endblock %}

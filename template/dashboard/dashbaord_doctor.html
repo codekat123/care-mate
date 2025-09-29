@@ -90,7 +90,8 @@
                 <div class="card shadow-sm border-0 mb-4">
                     <div class="card-body">
                         <h5 class="fw-bold mb-3">Generate Patient Report</h5>
-                        <form method="POST" action="{% url 'dashboard:generate_report' %}" class="row g-3 align-items-end">
+                        <form method="POST" action="{% url 'dashboard:generate_report' %}"
+                            class="row g-3 align-items-end">
                             {% csrf_token %}
 
                             <!-- Start Date -->
@@ -187,6 +188,60 @@
 
                             </div>
                             {% endfor %}
+                            <nav aria-label="Appointments pagination">
+                                <ul class="pagination justify-content-center mt-4">
+
+                                    <!-- First & Previous -->
+                                    {% if appointments.has_previous %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="?page=1">&laquo; First</a>
+                                    </li>
+                                    <li class="page-item">
+                                        <a class="page-link"
+                                            href="?page={{ appointments.previous_page_number }}">Previous</a>
+                                    </li>
+                                    {% else %}
+                                    <li class="page-item disabled">
+                                        <span class="page-link">&laquo; First</span>
+                                    </li>
+                                    <li class="page-item disabled">
+                                        <span class="page-link">Previous</span>
+                                    </li>
+                                    {% endif %}
+
+                                    <!-- Page numbers -->
+                                    {% for num in appointments.paginator.page_range %}
+                                    {% if appointments.number == num %}
+                                    <li class="page-item active">
+                                        <span class="page-link">{{ num }}</span>
+                                    </li>
+                                    {% elif num > appointments.number|add:'-3' and num < appointments.number|add:'3' %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                                    </li>
+                                    {% endif %}
+                                    {% endfor %}
+
+                                    <!-- Next & Last -->
+                                    {% if appointments.has_next %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="?page={{ appointments.next_page_number }}">Next</a>
+                                    </li>
+                                    <li class="page-item">
+                                        <a class="page-link" href="?page={{ appointments.paginator.num_pages }}">Last
+                                            &raquo;</a>
+                                    </li>
+                                    {% else %}
+                                    <li class="page-item disabled">
+                                        <span class="page-link">Next</span>
+                                    </li>
+                                    <li class="page-item disabled">
+                                        <span class="page-link">Last &raquo;</span>
+                                    </li>
+                                    {% endif %}
+                                </ul>
+                            </nav>
+
                         </div>
                         {% else %}
                         <div class="text-center py-5">

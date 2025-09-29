@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     'home',
     'ai_assistant',
     'chat',
+    "rest_framework",
 ]
 SITE_ID = 1
 
@@ -60,6 +61,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                "home.context_processors.global_context",
             ],
         },
     },
@@ -140,6 +142,11 @@ AUTH_USER_MODEL = 'user_account.User'
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
 ]
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+    )
+}
 GEMINI_API_KEY = os.getenv('GEMINI_API_KEY')
 
 # Channels / Redis (websocket layer)
