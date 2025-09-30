@@ -16,9 +16,12 @@ def send_reset_email(subject, message, from_email, recipient_list, html_message=
     )
 
 @shared_task
-def send_validation_email(domain, protocal, uid, token, name, user_email):
+def send_validation_email(domain, protocal, uid, token, name, user_email,is_apirequest=False):
     subject = 'Please activate your email'
-    activation_link = f"{protocal}://{domain}{reverse('user_account:verify_email', args=[token, uid])}"
+    if is_apirequest:
+        pass
+    else:
+        activation_link = f"{protocal}://{domain}{reverse('user_account:verify_email', args=[token, uid])}"
     context = {
         'name': name,
         'link': activation_link,
