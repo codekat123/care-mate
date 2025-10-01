@@ -1,12 +1,9 @@
 from rest_framework.generics import UpdateAPIView , RetrieveAPIView , ListAPIView
-from rest_framework.response import Response
-from rest_framework import status
 from .models import PatientProfile
 from home.models import Reservation
 from .serializer import PatientProfileSerializer , ReservationSerializer
 from rest_framework.exceptions import NotFound
-from rest_framework.permissions import IsAuthenticated , AllowAny
-
+from rest_framework.permissions import IsAuthenticated 
 
 class ProfilePatientUpdateAPIView(UpdateAPIView):
      queryset = PatientProfile.objects.all()
@@ -47,7 +44,7 @@ class AppointmentListAPIView(ListAPIView):
             raise NotFound("User not authenticated")
 
         try:
-            return PatientProfile.objects.filter(user=user)
-        except PatientProfile.DoesNotExist:
+                return Reservation.objects.filter(patient=self.request.user.patient)
+        except Reservation.DoesNotExist:
             raise NotFound("Profile not found")
 

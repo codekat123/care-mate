@@ -9,6 +9,11 @@ urlpatterns = [
      path('view-appointments/',ShowAppointment.as_view(),name='view_appointments'),
      path('rating-doctor/<int:doctor_id>/',rate_doctor,name='rate'),
                # API 
-     path('api/update/profile_patient/',ProfilePatientUpdateAPIView.as_view(),name='edit_patient'),
-     path('api/profile_patient/',ProfilePatientAPIView.as_view(),name='profile_patient'),
+     # Patients
+     path('api/patients/', ProfilePatientUpdateAPIView.as_view(), name='patient-update'),
+     path('api/patients/', ProfilePatientAPIView.as_view(), name='patient-detail'),
+     
+     # Appointments
+     path('api/appointments/', AppointmentListAPIView.as_view(), name='appointment-list'),
+
 ]

@@ -10,12 +10,13 @@ from .tasks import send_validation_email
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework import viewsets
 from django.utils.encoding import force_str
-
+from rest_framework.permissions import AllowAny
 
 
 class RegisterAPIView(CreateAPIView):
      queryset = User.objects.all()
      serializer_class = SignUpSerializer
+     permission_classes = [AllowAny]
 
      def perform_create(self,serializer):
         user = serializer.save(is_active=False) 

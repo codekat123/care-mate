@@ -7,6 +7,7 @@ class PatientProfileSerializer(serializers.ModelSerializer):
           model = PatientProfile
           fields = '__all__'
 class ReservationSerializer(serializers.ModelSerializer):
+     patient = serializers.CharField(source="patient.user.username", read_only=True)
      class Meta:
           model = Reservation
           fields = '__all__'
