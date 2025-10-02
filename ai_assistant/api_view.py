@@ -4,10 +4,13 @@ from .tasks import analyze_symptoms_task
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.permissions import IsAuthenticated
 from .serializer import ConversationSerializer, MessageSerializer
-
+from rest_framework.throttling import UserRateThrottle
 
 class AIChatAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+    throttle_classes = [UserRateThrottle]
     def get(self, request):
         conversation, _ = AIConversation.objects.get_or_create(user=request.user)
 
@@ -27,6 +30,7 @@ class AIChatAPIView(APIView):
 
 class SendMessageAPIView(APIView):
 
+    permission_classes = [IsAuthenticated]
     def post(self, request):
         message = request.data.get("message")
 

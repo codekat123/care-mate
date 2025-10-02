@@ -10,10 +10,12 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.views.decorators.http import require_POST
 from django.shortcuts import get_object_or_404
+from rest_framework.throttling import UserRateThrottle
 
 class UpdateDoctorDashboardAPIView(UpdateAPIView):
      queryset = DoctorProfile.objects.all()
      serializer_class = DoctorDashBoardSerializer
+     throttle_classes = [UserRateThrottle]
 
      def get_object(self):
           try:
@@ -26,6 +28,7 @@ class ViewProfilePatientAPIView(RetrieveAPIView):
     queryset = DoctorProfile.objects.all()
     serializer_class = DoctorDashBoardSerializer
     permission_classes = [IsAuthenticated]
+    throttle_classes = [UserRateThrottle]
 
     def get_object(self):
         id = self.kwargs.get('id')
@@ -43,6 +46,7 @@ class AppointmentListAPIView(ListAPIView):
     queryset = Reservation.objects.all()
     serializer_class = ReservationSerializer
     permission_classes = [IsAuthenticated]
+    throttle_classes = [UserRateThrottle]
 
     def get_queryset(self):
         user = self.request.user
@@ -58,6 +62,7 @@ class DeleteAppointment(DestroyAPIView):
      queryset = Reservation.objects.all()
      serializer_class = ReservationSerializer
      permission_classes = [IsAuthenticated]
+     throttle_classes = [UserRateThrottle]
 
 
 @api_view(['POST'])
@@ -76,3 +81,4 @@ def approve_appointment(request, id):
 class ScheduleAppointmentAPIView(UpdateAPIView):
      queryset = Reservation.objects.all()
      serializer_class = ReservationSerializer
+     throttle_classes = [UserRateThrottle]

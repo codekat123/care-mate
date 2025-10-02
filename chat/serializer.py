@@ -1,12 +1,12 @@
 from rest_framework import serializers
-from .models import AIConversation , AIMessage
+from .models import Conversation , Message
 
 class ConversationSerializer(serializers.ModelSerializer):
      class Meta:
-          model = AIConversation
+          model = Conversation
           fields = '__all__'
 
 class MessageSerializer(serializers.ModelSerializer):
      class Meta:
-          model = AIMessage
+          model = Message
           fields = '__all__'

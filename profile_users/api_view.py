@@ -4,11 +4,14 @@ from home.models import Reservation
 from .serializer import PatientProfileSerializer , ReservationSerializer
 from rest_framework.exceptions import NotFound
 from rest_framework.permissions import IsAuthenticated 
+from rest_framework.throttling import UserRateThrottle
+
 
 class ProfilePatientUpdateAPIView(UpdateAPIView):
      queryset = PatientProfile.objects.all()
      serializer_class = PatientProfileSerializer
      permission_classes = [IsAuthenticated]
+     throttle_classes = [UserRateThrottle]
 
      def get_object(self):
           try:
@@ -21,6 +24,7 @@ class ProfilePatientAPIView(RetrieveAPIView):
     queryset = PatientProfile.objects.all()
     serializer_class = PatientProfileSerializer
     permission_classes = [IsAuthenticated]
+    throttle_classes = [UserRateThrottle]
 
     def get_object(self):
         user = self.request.user
@@ -37,6 +41,7 @@ class AppointmentListAPIView(ListAPIView):
     queryset = Reservation.objects.all()
     serializer_class = ReservationSerializer
     permission_classes = [IsAuthenticated]
+    throttle_classes = [UserRateThrottle]
 
     def get_queryset(self):
         user = self.request.user

@@ -7,7 +7,6 @@ from .models import Conversation, Message
 
 User = get_user_model()
 
-
 class ChatConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         user = self.scope.get('user')
