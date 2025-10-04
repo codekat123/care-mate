@@ -67,7 +67,7 @@ class DeleteAppointment(DestroyAPIView):
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
-def approve_appointment(request, id):
+def approve(request, id):
     appointment = get_object_or_404(Reservation, id=id)
 
     appointment.is_approved = not appointment.is_approved

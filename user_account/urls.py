@@ -4,14 +4,6 @@ from django.contrib.auth.views import LogoutView
 from django.contrib.auth import views as auth_views
 from .views import *
 from .api_view import *
-from rest_framework.routers import DefaultRouter
-
-router = DefaultRouter()
-# router.register(r"api/register",,basename='api/register')
-
-
-
-
 
 
 app_name = 'user_account'
@@ -28,7 +20,5 @@ urlpatterns = [
            # API
      path('api/register/',RegisterAPIView.as_view(),name='api_register'),
      path('api/login/', CustomLoginAPIView.as_view(), name='api_login'),
-     
-     
-     path('',include(router.urls)),
+     path('logout/', LogoutView.as_view(), name='logout'),
 ]

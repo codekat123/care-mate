@@ -18,7 +18,7 @@ urlpatterns = [
           # Appointments
           path('api/appointments/<int:pk>/', DeleteAppointment.as_view(), name='appointment-delete'),
           path('api/appointments/', AppointmentListAPIView.as_view(), name='appointment-list'),
-          path('api/appointments/<int:id>/approve/', approve_appointment, name='appointment-approve'),
+          path('api/appointments/<int:id>/approve/', approve, name='appointment-approve'),
           path('api/appointments/<int:pk>/schedule/', ScheduleAppointmentAPIView.as_view(), name='appointment-schedule'),
 
           # Patient Profile
