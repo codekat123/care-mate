@@ -123,17 +123,4 @@ Configured for SMTP (Gmail):
 - Host: `smtp.gmail.com`, Port: `587`, TLS: `True`
 - Provide `EMAIL_HOST_USER` and `EMAIL_HOST_PASSWORD` in `.env`
 
-## Troubleshooting
-- Missing env vars: ensure `.env` exists and contains required keys.
-- DB connection errors: verify PostgreSQL is running and `src/settings.py` DB credentials match.
-- Redis/Channels errors: ensure Redis is running and `REDIS_URL` is correct.
-- WebSockets: ASGI is configured; `runserver` uses ASGI in modern Django, but using Daphne/uvicorn can help in complex setups.
-- Migrations: run `python manage.py makemigrations` then `migrate` if you add models.
 
-## Development Tips
-- Custom user model: `AUTH_USER_MODEL = 'user_account.User'` (set at project start).
-- Throttling and JWT settings are defined in `src/settings.py`.
-- Celery app lives in `src/celery.py` and auto-discovers tasks in installed apps.
-
-## License
-MIT (or update accordingly).
